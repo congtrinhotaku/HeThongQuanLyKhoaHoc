@@ -1,14 +1,11 @@
-
 <div class="container">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold">Quản lý Cơ Sở</h2>
-    <!-- Nút thêm cơ sở -->
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
       <i class="bi bi-plus-circle"></i> Thêm Cơ Sở
     </button>
   </div>
 
-  <!-- Bảng danh sách cơ sở -->
   <div class="table-responsive">
     <table class="table table-hover table-bordered align-middle">
       <thead class="table-dark">
@@ -28,21 +25,22 @@
             <td><%= cs.diaChi %></td>
             <td><%= cs.soDienThoai || "Chưa có" %></td>
             <td class="text-center">
-              <!-- Nút sửa -->
-              <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-<%= cs._id %>">
-                <i class="bi bi-pencil-square"></i>
-              </button>
-              <!-- Nút xóa -->
-              <form action="/admin/coso/delete/<%= cs._id %>" method="POST" class="d-inline"
-                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa cơ sở này không?')">
-                <button type="submit" class="btn btn-sm btn-danger">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </form>
+                <!-- Nút sửa chuyển hướng -->
+                <a href="/admin/coso/<%= cs._id %>" class="btn btn-sm btn-warning">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+
+                <!-- Nút xóa -->
+                <form action="/admin/coso/delete/<%= cs._id %>" method="POST" class="d-inline"
+                        onsubmit="return confirm('Bạn có chắc chắn muốn xóa cơ sở này không?')">
+                    <button type="submit" class="btn btn-sm btn-danger">
+                    <i class="bi bi-trash"></i>
+                    </button>
+                </form>
             </td>
           </tr>
 
-          <!-- Modal chỉnh sửa -->
+          <!-- Modal edit -->
           <div class="modal fade" id="editModal-<%= cs._id %>" tabindex="-1">
             <div class="modal-dialog">
               <form action="/admin/coso/edit/<%= cs._id %>" method="POST" class="modal-content">
@@ -77,7 +75,7 @@
   </div>
 </div>
 
-<!-- Modal thêm mới -->
+<!-- Modal thêm -->
 <div class="modal fade" id="addModal" tabindex="-1">
   <div class="modal-dialog">
     <form action="/admin/coso/add" method="POST" class="modal-content">

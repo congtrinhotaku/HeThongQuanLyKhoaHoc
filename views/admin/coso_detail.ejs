@@ -1,0 +1,119 @@
+<div class="container">
+  <h2 class="fw-bold mb-4">Chi tiết Cơ Sở</h2>
+
+  <!-- Form chỉnh sửa cơ sở -->
+  <form action="/admin/coso/<%= cs._id %>" method="POST" class="card p-4 shadow-sm mb-5">
+    <h5 class="mb-3">Thông tin cơ sở</h5>
+    <div class="mb-3">
+      <label class="form-label">Tên cơ sở</label>
+      <input type="text" name="tenCoSo" class="form-control" value="<%= cs.tenCoSo %>" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Địa chỉ</label>
+      <input type="text" name="diaChi" class="form-control" value="<%= cs.diaChi %>" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Số điện thoại</label>
+      <input type="text" name="soDienThoai" class="form-control" value="<%= cs.soDienThoai %>">
+    </div>
+    <div class="d-flex justify-content-between">
+      <a href="/admin/coso" class="btn btn-secondary">Quay lại</a>
+      <button type="submit" class="btn btn-success">Cập nhật</button>
+    </div>
+  </form>
+
+  <!-- Quản lý phòng học -->
+  <div class="card p-4 shadow-sm">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5>Danh sách phòng học</h5>
+      <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addPhongModal">
+        <i class="bi bi-plus-circle"></i> Thêm phòng
+      </button>
+    </div>
+
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Tên phòng</th>
+          <th>Sức chứa</th>
+          <th class="text-center">Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% phongHocs.forEach((ph, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= ph.tenPhong %></td>
+            <td><%= ph.sucChua || "-" %></td>
+            <td class="text-center">
+              <!-- Nút sửa -->
+              <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editPhongModal-<%= ph._id %>">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <!-- Nút xóa -->
+              <form action="/admin/coso/<%= cs._id %>/phonghoc/<%= ph._id %>/delete" method="POST" class="d-inline"
+                    onsubmit="return confirm('Bạn chắc chắn muốn xóa phòng này?')">
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+
+          <!-- Modal sửa phòng -->
+          <div class="modal fade" id="editPhongModal-<%= ph._id %>" tabindex="-1">
+            <div class="modal-dialog">
+              <form action="/admin/coso/<%= cs._id %>/phonghoc/<%= ph._id %>/edit" method="POST" class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Chỉnh sửa phòng</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="form-label">Tên phòng</label>
+                    <input type="text" name="tenPhong" class="form-control" value="<%= ph.tenPhong %>" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Sức chứa</label>
+                    <input type="number" name="sucChua" class="form-control" value="<%= ph.sucChua %>">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">Lưu</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal thêm phòng -->
+<div class="modal fade" id="addPhongModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form action="/admin/coso/<%= cs._id %>/phonghoc/add" method="POST" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thêm Phòng Học</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Tên phòng</label>
+          <input type="text" name="tenPhong" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Sức chứa</label>
+          <input type="number" name="sucChua" class="form-control">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Thêm</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+      </div>
+    </form>
+  </div>
+</div>

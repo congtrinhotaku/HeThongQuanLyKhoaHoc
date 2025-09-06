@@ -1,0 +1,113 @@
+<div class="container">
+  <h2 class="fw-bold mb-4">Chi tiết Loại Khóa Học</h2>
+
+  <!-- Form chỉnh sửa loại -->
+  <form action="/admin/loaikhoahoc/<%= loai._id %>" method="POST" class="card p-4 shadow-sm mb-5">
+    <h5 class="mb-3">Thông tin loại</h5>
+    <div class="mb-3">
+      <label class="form-label">Tên loại</label>
+      <input type="text" name="tenLoai" class="form-control" value="<%= loai.tenLoai %>" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Mô tả</label>
+      <textarea name="moTa" class="form-control"><%= loai.moTa %></textarea>
+    </div>
+    <div class="d-flex justify-content-between">
+      <a href="/admin/loaikhoahoc" class="btn btn-secondary">Quay lại</a>
+      <button type="submit" class="btn btn-success">Cập nhật</button>
+    </div>
+  </form>
+
+  <!-- Quản lý Lesson -->
+  <div class="card p-4 shadow-sm">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5>Bài học thuộc loại này</h5>
+      <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addLessonModal">
+        <i class="bi bi-plus-circle"></i> Thêm bài học
+      </button>
+    </div>
+
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Tên bài học</th>
+          <th>Nội dung</th>
+          <th class="text-center">Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% lessons.forEach((ls, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= ls.tenLesson %></td>
+            <td><%= ls.noiDung || "-" %></td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editLessonModal-<%= ls._id %>">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <form action="/admin/loaikhoahoc/<%= loai._id %>/lesson/<%= ls._id %>/delete" method="POST" class="d-inline"
+                    onsubmit="return confirm('Bạn chắc chắn muốn xóa bài học này?')">
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+
+          <!-- Modal edit lesson -->
+          <div class="modal fade" id="editLessonModal-<%= ls._id %>" tabindex="-1">
+            <div class="modal-dialog">
+              <form action="/admin/loaikhoahoc/<%= loai._id %>/lesson/<%= ls._id %>/edit" method="POST" class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Chỉnh sửa bài học</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="form-label">Tên bài học</label>
+                    <input type="text" name="tenLesson" class="form-control" value="<%= ls.tenLesson %>" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Nội dung</label>
+                    <textarea name="noiDung" class="form-control"><%= ls.noiDung %></textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">Lưu</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal thêm lesson -->
+<div class="modal fade" id="addLessonModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form action="/admin/loaikhoahoc/<%= loai._id %>/lesson/add" method="POST" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thêm Bài Học</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Tên bài học</label>
+          <input type="text" name="tenLesson" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Nội dung</label>
+          <textarea name="noiDung" class="form-control"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Thêm</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+      </div>
+    </form>
+  </div>
+</div>

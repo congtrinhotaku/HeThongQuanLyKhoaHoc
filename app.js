@@ -57,12 +57,19 @@ app.use(session({
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
-const CoSoRoutes = require("./routes/coSoRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const CoSoRoutes = require("./routes/coSoRoutes.js");
+const LoaiKhoaHocRoutes = require("./routes/loaikhoahocRoutes");
+
 
 
 
 app.use("/", authRoutes);
-app.use("/coso", isAdmin,CoSoRoutes );
+app.use("/admin/coso", isAdmin,CoSoRoutes );
+app.use("/admin/loaikhoahoc", isAdmin, LoaiKhoaHocRoutes);
+app.use("/admin", isAdmin, adminRoutes);
+
+
 
 // 404 handler
 app.use((req, res) => {
