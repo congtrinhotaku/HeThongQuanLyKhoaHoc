@@ -13,7 +13,7 @@ exports.postRegister = async (req, res) => {
 
     if (existingUser) {
         return res.render("auth/dangky", {
-          error: "Email đã được sử dụng. Vui lòng dùng email khác.",
+          error: "Email đã được sử dụng. Vui lòng dùng email khác.",layout: false  
         });
     }
 
@@ -30,7 +30,7 @@ exports.postRegister = async (req, res) => {
   } catch (err) {
     console.error("Lỗi đăng ký:", err);
     res.render("auth/dangky", {
-      error: "Lỗi đăng ký: " + err.message,
+      error: "Lỗi đăng ký: " + err.message,layout: false  
     });
   }
 };
@@ -47,7 +47,7 @@ exports.postLogin = async (req, res) => {
 
     if (!user) {
       return res.render("auth/dangnhap", {
-        error: "❌ Email không tồn tại.",
+        error: "❌ Email không tồn tại.",layout: false  
       });
     }
 
@@ -55,7 +55,7 @@ exports.postLogin = async (req, res) => {
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.render("auth/dangnhap", {
-        error: "❌ Sai mật khẩu.",
+        error: "❌ Sai mật khẩu.",layout: false  
       });
     }
 
@@ -67,7 +67,7 @@ exports.postLogin = async (req, res) => {
     
   } catch (err) {
     res.render("auth/dangnhap", {
-      error: "❌ Lỗi đăng nhập: " + err.message,
+      error: "❌ Lỗi đăng nhập: " + err.message,layout: false  
     });
   }
 };
