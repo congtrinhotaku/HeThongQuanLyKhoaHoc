@@ -1,0 +1,195 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Quản lý Học Viên</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+      <i class="bi bi-plus-circle"></i> Thêm học viên
+    </button>
+  </div>
+
+  <!-- Bảng danh sách học viên -->
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Ảnh</th>
+          <th>Họ tên</th>
+          <th>Email</th>
+          <th>SĐT</th>
+          <th>Zalo</th>
+          <th>Giới tính</th>
+          <th>Ngày sinh</th>
+          <th>Địa chỉ</th>
+          <th class="text-center">Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% dsHocVien.forEach((hv, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td>
+              <% if (hv.anhDaiDien) { %>
+                <img src="<%= hv.anhDaiDien %>" alt="Avatar" style="width:50px;height:50px;object-fit:cover;border-radius:50%;">
+              <% } else { %>
+                <span class="text-muted">Chưa có</span>
+              <% } %>
+            </td>
+            <td><%= hv.hoTen %></td>
+            <td><%= hv.email %></td>
+            <td><%= hv.soDienThoai || "-" %></td>
+            <td><%= hv.soZalo || "-" %></td>
+            <td><%= hv.gioiTinh || "-" %></td>
+            <td><%= hv.ngaySinh ? new Date(hv.ngaySinh).toLocaleDateString("vi-VN") : "-" %></td>
+            <td><%= hv.diaChi || "-" %></td>
+            <td class="text-center">
+              <!-- Nút sửa -->
+              <button class="btn btn-sm btn-warning" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#editModal-<%= hv._id %>">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <!-- Nút xóa -->
+              <form action="/admin/hocvien/delete/<%= hv._id %>" method="POST" class="d-inline"
+                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa học viên này không?')">
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+
+          <!-- Modal sửa học viên -->
+          <div class="modal fade" id="editModal-<%= hv._id %>" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <form action="/admin/hocvien/update/<%= hv._id %>" method="POST" enctype="multipart/form-data">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Cập nhật học viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Họ tên</label>
+                        <input type="text" name="hoTen" class="form-control" value="<%= hv.hoTen %>" required>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" value="<%= hv.email %>" required>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="text" name="soDienThoai" class="form-control" value="<%= hv.soDienThoai %>">
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Zalo</label>
+                        <input type="text" name="soZalo" class="form-control" value="<%= hv.soZalo %>">
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Giới tính</label>
+                        <select name="gioiTinh" class="form-select">
+                          <option value="" <%= !hv.gioiTinh ? "selected" : "" %>>-</option>
+                          <option value="Nam" <%= hv.gioiTinh==="Nam"?"selected":"" %>>Nam</option>
+                          <option value="Nữ" <%= hv.gioiTinh==="Nữ"?"selected":"" %>>Nữ</option>
+                          <option value="Khác" <%= hv.gioiTinh==="Khác"?"selected":"" %>>Khác</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="date" name="ngaySinh" class="form-control" value="<%= hv.ngaySinh ? new Date(hv.ngaySinh).toISOString().split('T')[0] : '' %>">
+                      </div>
+                      <div class="col-md-12 mb-3">
+                        <label class="form-label">Địa chỉ</label>
+                        <input type="text" name="diaChi" class="form-control" value="<%= hv.diaChi %>">
+                      </div>
+                      <div class="col-md-12 mb-3">
+                        <label class="form-label">Ảnh đại diện</label>
+                        <input type="file" name="anhDaiDien" class="form-control" accept="image/*" onchange="previewImage(event, 'preview-<%= hv._id %>')">
+                        <img id="preview-<%= hv._id %>" src="<%= hv.anhDaiDien %>" style="max-width:120px;margin-top:10px;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal thêm học viên -->
+<div class="modal fade" id="addModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form action="/admin/hocvien/add" method="POST" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title">Thêm học viên</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Họ tên</label>
+              <input type="text" name="hoTen" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Số điện thoại</label>
+              <input type="text" name="soDienThoai" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Zalo</label>
+              <input type="text" name="soZalo" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Giới tính</label>
+              <select name="gioiTinh" class="form-select">
+                <option value="">-</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Ngày sinh</label>
+              <input type="date" name="ngaySinh" class="form-control">
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="form-label">Địa chỉ</label>
+              <input type="text" name="diaChi" class="form-control">
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="form-label">Ảnh đại diện</label>
+              <input type="file" name="anhDaiDien" class="form-control" accept="image/*" onchange="previewImage(event, 'preview-add')">
+              <img id="preview-add" style="max-width:120px;margin-top:10px;">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Thêm</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function previewImage(event, previewId) {
+  const reader = new FileReader();
+  reader.onload = function() {
+    const output = document.getElementById(previewId);
+    output.src = reader.result;
+  };
+  reader.readAsDataURL(event.target.files[0]);
+}
+</script>

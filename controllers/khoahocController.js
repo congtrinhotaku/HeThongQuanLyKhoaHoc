@@ -235,15 +235,19 @@ exports.deleteKhoaHoc = async (req, res) => {
   }
 };
 
+
 exports.getChiTietKhoaHoc = async (req, res) => {
   try {
     const id = req.params.id;
     const khoaHoc = await KhoaHoc.findById(id)
       .populate("loaiKhoaHoc")
-      .populate("giangVien")
+      .populate({
+        path: "giangVien",
+        populate: { path: "MaTaiKhoan", select: "username email" }
+      })
       .populate({
         path: "phongHoc",
-        populate: { path: "coSo" }   // ✅ lấy luôn coSo từ PhongHoc
+        populate: { path: "coSo" }
       })
       .lean();
 
@@ -258,19 +262,29 @@ exports.getChiTietKhoaHoc = async (req, res) => {
       .populate("MaTaiKhoan", "email username")
       .lean();
 
+    // 👉 Lấy danh sách học viên đăng ký
+    const dsDangKy = await DangKyKhoaHoc.find({ khoaHoc: id })
+      .populate({
+        path: "hocVien",
+        populate: { path: "MaTaiKhoan", select: "username email" }
+      })
+      .lean();
+
     res.render("admin/khoahoc_detail", {
       layout: "layouts/main",
       title: "Chi tiết Khóa Học",
       user: req.user,
       khoaHoc,
       dsBuoi,
-      DSGiangVien
+      DSGiangVien,
+      dsDangKy
     });
   } catch (err) {
     console.error("Lỗi getChiTietKhoaHoc:", err);
     res.redirect("/admin/khoahoc");
   }
 };
+
 
 
   // Cập nhật thông tin khóa học (chỉ tên, trạng thái, giảng viên)

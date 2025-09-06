@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const hocVienSchema = new Schema({
-    MaTaiKhoan: {  type: Schema.Types.ObjectId, ref: "User", Unique:true },
+    MaTaiKhoan: {  type: Schema.Types.ObjectId, ref: "User", unique:true },
     hoTen: { type: String, required: true },
     ngaySinh: { type: Date },
     gioiTinh: { type: String, enum: ["Nam", "Nữ", "Khác"] },
@@ -12,7 +12,7 @@ const hocVienSchema = new Schema({
     soZalo: { type: String, unique: true },
     diaChi: { type: String },
     anhDaiDien: { type: String },
-    faceDescriptor: { type: [Number], default: [] },
+    faceDescriptor: { type: [Number], default: [] }
 });
 
 
