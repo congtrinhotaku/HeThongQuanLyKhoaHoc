@@ -57,11 +57,12 @@ app.use(session({
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
-// const adminRoutes = require("./routes/adminRoutes");
+const CoSoRoutes = require("./routes/coSoRoutes");
+
 
 
 app.use("/", authRoutes);
-// app.use("/admin", isAdmin, adminRoutes);
+app.use("/coso", isAdmin,CoSoRoutes );
 
 // 404 handler
 app.use((req, res) => {

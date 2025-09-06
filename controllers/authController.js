@@ -63,7 +63,7 @@ exports.postLogin = async (req, res) => {
     req.session.userId = user._id;
     req.session.user = user;
 
-    if(user.role = "admin")  return res.redirect("/employees");
+    if(user.role = "admin")  return res.redirect("/coso");
     
   } catch (err) {
     res.render("auth/dangnhap", {

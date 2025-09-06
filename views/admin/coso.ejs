@@ -1,0 +1,108 @@
+
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Quản lý Cơ Sở</h2>
+    <!-- Nút thêm cơ sở -->
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+      <i class="bi bi-plus-circle"></i> Thêm Cơ Sở
+    </button>
+  </div>
+
+  <!-- Bảng danh sách cơ sở -->
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Tên Cơ Sở</th>
+          <th>Địa Chỉ</th>
+          <th>Số Điện Thoại</th>
+          <th class="text-center">Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% DSCoso.forEach((cs, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= cs.tenCoSo %></td>
+            <td><%= cs.diaChi %></td>
+            <td><%= cs.soDienThoai || "Chưa có" %></td>
+            <td class="text-center">
+              <!-- Nút sửa -->
+              <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-<%= cs._id %>">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <!-- Nút xóa -->
+              <form action="/admin/coso/delete/<%= cs._id %>" method="POST" class="d-inline"
+                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa cơ sở này không?')">
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+
+          <!-- Modal chỉnh sửa -->
+          <div class="modal fade" id="editModal-<%= cs._id %>" tabindex="-1">
+            <div class="modal-dialog">
+              <form action="/admin/coso/edit/<%= cs._id %>" method="POST" class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Chỉnh sửa cơ sở</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="form-label">Tên cơ sở</label>
+                    <input type="text" name="tenCoSo" class="form-control" value="<%= cs.tenCoSo %>" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input type="text" name="diaChi" class="form-control" value="<%= cs.diaChi %>" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Số điện thoại</label>
+                    <input type="text" name="soDienThoai" class="form-control" value="<%= cs.soDienThoai %>">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">Lưu</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal thêm mới -->
+<div class="modal fade" id="addModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form action="/admin/coso/add" method="POST" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thêm Cơ Sở</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Tên cơ sở</label>
+          <input type="text" name="tenCoSo" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Địa chỉ</label>
+          <input type="text" name="diaChi" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Số điện thoại</label>
+          <input type="text" name="soDienThoai" class="form-control">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Thêm mới</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+      </div>
+    </form>
+  </div>
+</div>
