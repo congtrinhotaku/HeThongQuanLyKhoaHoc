@@ -1,0 +1,56 @@
+<div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary border-end shadow" 
+     style="width: 80px; min-height: 100vh; position: fixed; top: 0; left: 0;">
+
+  <!-- Logo -->
+  <a href="/tasks" class="d-flex align-items-center mb-4 link-body-emphasis text-decoration-none justify-content-center">
+    <i class="bi bi-kanban fs-3 text-primary"></i>
+  </a>
+
+  <!-- Menu chính -->
+  <ul class="nav nav-pills flex-column mb-auto text-center">
+
+    <!-- Backlog -->
+    <li class="nav-item mb-3">
+      <a href="/tasks" class="nav-link py-2 rounded-3" title="Backlog" data-bs-toggle="tooltip" data-bs-placement="right">
+        <i class="bi bi-card-checklist fs-4"></i>
+      </a>
+    </li>
+
+    <!-- Lịch -->
+    <li class="nav-item mb-3">
+      <a href="/calendar" class="nav-link py-2 rounded-3" title="Lịch" data-bs-toggle="tooltip" data-bs-placement="right">
+        <i class="bi bi-calendar-event fs-4"></i>
+      </a>
+    </li>
+  </ul>
+
+  <hr>
+
+  
+
+  <!-- Nút đổi theme ở dưới cùng -->
+  <div class="mt-auto text-center">
+    <button id="toggleTheme"
+            class="btn btn-sm btn-outline-secondary rounded-circle shadow"
+            style="width: 42px; height: 42px;"
+            title="Chuyển đổi giao diện">
+      <i id="themeIcon" class="bi bi-moon fs-5"></i>
+    </button>
+  </div>
+
+  <div class="dropdown text-center mt-3 ms-2">
+    <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" 
+      id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-person-circle fs-3"></i>
+    </a>
+    <ul class="dropdown-menu text-small shadow" aria-labelledby="userMenu">
+      <li>
+        <span class="dropdown-item-text fw-bold"><%= user.username %></span>
+      </li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item" href="/profile">Trang cá nhân</a></li>
+      <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+    </ul>
+  </div>
+
+</div>
