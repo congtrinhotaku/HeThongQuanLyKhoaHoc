@@ -9,7 +9,7 @@ const { Canvas, Image, ImageData } = canvas;
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
 // Đường dẫn models
-const MODEL_URL = path.join(__dirname, "../facemodels");
+const MODEL_URL = path.join(__dirname, "../public/facemodels");
 
 const loadModels = async () => {
   try {

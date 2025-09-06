@@ -58,15 +58,10 @@ app.use(session({
 // Routes
 const authRoutes = require("./routes/authRoutes");
 // const adminRoutes = require("./routes/adminRoutes");
-const employeeRoutes = require("./routes/employeeRoutes");
-// const categoryRoutes = require("./routes/categoryRoutes");
+
 
 app.use("/", authRoutes);
 // app.use("/admin", isAdmin, adminRoutes);
-app.use("/employees",isAdmin, employeeRoutes);
-// app.use("/categories", categoryRoutes);
-app.use("/kiosk", require("./routes/kioskRoutes"));
-
 
 // 404 handler
 app.use((req, res) => {
