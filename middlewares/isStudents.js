@@ -7,7 +7,7 @@ module.exports =  async function  (req, res, next) {
     {
      const user = await NguoiDung.findOne({ _id: req.session.userId});
      if (!user) return res.redirect("/login");
-     if (user.role != "students") return res.redirect("/login");
+     if (user.role != "student") return res.redirect("/login");
      req.user = user;
      next();
     }else 
