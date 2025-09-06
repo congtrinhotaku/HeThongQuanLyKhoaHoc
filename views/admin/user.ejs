@@ -1,0 +1,110 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Quản lý Tài khoản</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+      <i class="bi bi-plus-circle"></i> Thêm Tài khoản
+    </button>
+  </div>
+
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th class="text-center">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% DSUser.forEach((u, i) => { %>
+        <tr>
+          <td><%= i+1 %></td>
+          <td><%= u.username %></td>
+          <td><%= u.email %></td>
+          <td>
+            <% if (u.role === "admin") { %>
+              <span class="badge bg-danger">Admin</span>
+            <% } else if (u.role === "teacher") { %>
+              <span class="badge bg-primary">Teacher</span>
+            <% } else { %>
+              <span class="badge bg-success">Student</span>
+            <% } %>
+          </td>
+          <td class="text-center">
+            <!-- nút đổi mật khẩu -->
+            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#changePwModal-<%= u._id %>">
+              <i class="bi bi-key"></i>
+            </button>
+            <!-- nút xóa -->
+            <form action="/admin/user/delete/<%= u._id %>" method="POST" class="d-inline"
+                  onsubmit="return confirm('Xóa tài khoản này?')">
+              <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal Thêm tài khoản -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form action="/admin/user/add" method="POST" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thêm Tài khoản</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label>Username</label>
+          <input type="text" name="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Email</label>
+          <input type="email" name="email" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Password</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Role</label>
+          <select name="role" class="form-select">
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Thêm</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Các Modal Đổi mật khẩu -->
+<% DSUser.forEach(u => { %>
+<div class="modal fade" id="changePwModal-<%= u._id %>" tabindex="-1">
+  <div class="modal-dialog">
+    <form action="/admin/user/change-password/<%= u._id %>" method="POST" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Đổi mật khẩu - <%= u.username %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Mật khẩu mới</label>
+          <input type="password" name="newPassword" class="form-control" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Cập nhật</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+      </div>
+    </form>
+  </div>
+</div>
+<% }) %>

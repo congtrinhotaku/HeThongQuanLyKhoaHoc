@@ -1,0 +1,104 @@
+<div class="container">
+  <h2 class="fw-bold mb-4">Chi tiết Khóa Học</h2>
+
+  <!-- Form chỉnh sửa thông tin -->
+  <form action="/admin/khoahoc/update/<%= khoaHoc._id %>" method="POST" class="mb-4">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Tên khóa học</label>
+        <input type="text" name="tenKhoaHoc" value="<%= khoaHoc.tenKhoaHoc %>" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Trạng thái</label>
+        <select name="trangThai" class="form-select">
+          <option value="Đang mở" <%= khoaHoc.trangThai === "Đang mở" ? "selected" : "" %>>Đang mở</option>
+          <option value="Đã kết thúc" <%= khoaHoc.trangThai === "Đã kết thúc" ? "selected" : "" %>>Đã kết thúc</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Giảng viên</label>
+      <select name="giangVien" multiple class="form-select">
+        <% DSGiangVien.forEach(gv => { %>
+          <option value="<%= gv._id %>"
+            <%= khoaHoc.giangVien.some(g => g._id.toString() === gv._id.toString()) ? "selected" : "" %>>
+            <%= gv.MaTaiKhoan?.username %> (<%= gv.MaTaiKhoan?.email %>)
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <!-- Chỉ hiển thị readonly -->
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label class="form-label">Loại khóa học</label>
+        <input type="text" value="<%= khoaHoc.loaiKhoaHoc?.tenLoai || '' %>" class="form-control" disabled>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Cơ sở</label>
+        <input type="text" value="<%= khoaHoc.phongHoc?.coSo?.tenCoSo || '' %>" class="form-control" disabled>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Phòng học</label>
+        <input type="text" value="<%= khoaHoc.phongHoc?.tenPhong || '' %>" class="form-control" disabled>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label class="form-label">Số lượng tối đa</label>
+        <input type="number" value="<%= khoaHoc.soLuongToiDa %>" class="form-control" disabled>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Thời gian bắt đầu</label>
+        <input type="text" value="<%= khoaHoc.thoiGianBatDau ? khoaHoc.thoiGianBatDau.toLocaleDateString('vi-VN') : '' %>" class="form-control" disabled>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Thời gian kết thúc</label>
+        <input type="text" value="<%= khoaHoc.thoiGianKetThuc ? khoaHoc.thoiGianKetThuc.toLocaleDateString('vi-VN') : '' %>" class="form-control" disabled>
+      </div>
+    </div>
+
+    <button class="btn btn-primary">Cập nhật</button>
+  </form>
+
+
+
+
+  <!-- Danh sách buổi học -->
+  <h4 class="fw-bold">Danh sách Buổi Học</h4>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Ngày</th>
+          <th>Giờ vào</th>
+          <th>Giờ ra</th>
+          <th>Lesson</th>
+          <th class="text-center">Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% dsBuoi.forEach((b, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= new Date(b.ngayHoc).toLocaleDateString("vi-VN") %></td>
+            <td><%= b.gioBatDau %></td>
+            <td><%= b.gioKetThuc %></td>
+            <td><%= b.lesson ? b.lesson.tenLesson : "-" %></td>
+            <td class="text-center">
+              <form action="/admin/khoahoc/<%= khoaHoc._id %>/buoi/delete/<%= b._id %>" method="POST"
+                onsubmit="return confirm('Xóa buổi này? Các lesson phía sau sẽ lùi lại.')">
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="bi bi-trash"></i> Xóa
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>

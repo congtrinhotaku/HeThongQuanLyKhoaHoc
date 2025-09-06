@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Quản lý Khóa Học</h2>
+    <a class="btn btn-primary" href="/admin/khoahoc/add">
+      <i class="bi bi-plus-circle"></i> Thêm khóa học
+    </a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Tên khóa học</th>
+          <th>Loại</th>
+          <th>Giảng viên</th>
+          <th>Số lượng</th>
+          <th>Lịch học</th>
+          <th>Trạng thái</th>
+          <th class="text-center">Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% DSKhoaHoc.forEach((kh, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= kh.tenKhoaHoc %></td>
+            <td><%= kh.loaiKhoaHoc ? kh.loaiKhoaHoc.tenLoai : "-" %></td>
+            <td>
+              <% if (kh.giangVien && kh.giangVien.length > 0) { %>
+                <% kh.giangVien.forEach(gv => { %>
+                  <span class="badge bg-primary me-1"><%= gv.hoTen %></span>
+                <% }) %>
+              <% } else { %>
+                <span class="text-muted">-</span>
+              <% } %>
+            </td>
+            <td><%= kh.soLuongDangKy %> / <%= kh.soLuongToiDa || "-" %></td>
+            <td>
+              <% if (kh.lichHoc && kh.lichHoc.length > 0) { %>
+                <% kh.lichHoc.forEach(lh => { %>
+                  <span class="badge bg-info text-dark me-1">
+                    Thứ <%= lh.thu %> (<%= lh.gioBatDau %> - <%= lh.gioKetThuc %>)
+                  </span>
+                <% }) %>
+              <% } else { %>
+                <span class="text-muted">Chưa có</span>
+              <% } %>
+            </td>
+            <td>
+              <% if (kh.trangThaiThucTe === "Chưa bắt đầu") { %>
+                <span class="badge bg-secondary"><%= kh.trangThaiThucTe %></span>
+              <% } else if (kh.trangThaiThucTe === "Đang diễn ra") { %>
+                <span class="badge bg-success"><%= kh.trangThaiThucTe %></span>
+              <% } else { %>
+                <span class="badge bg-danger"><%= kh.trangThaiThucTe %></span>
+              <% } %>
+            </td>
+            <td class="text-center">
+              <a href="/admin/khoahoc/<%= kh._id %>" class="btn btn-sm btn-warning">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+              <form action="/admin/khoahoc/delete/<%= kh._id %>" method="POST" class="d-inline"
+                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa khóa học này không?')">
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>

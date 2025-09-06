@@ -60,6 +60,10 @@ const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const CoSoRoutes = require("./routes/coSoRoutes.js");
 const LoaiKhoaHocRoutes = require("./routes/loaikhoahocRoutes");
+const KhoaHocRoutes = require("./routes/khoahocRoutes");
+const UserRoutes = require("./routes/userRoutes");
+const GiangVienRoutes = require("./routes/giangvienRoutes");
+
 
 
 
@@ -67,7 +71,10 @@ const LoaiKhoaHocRoutes = require("./routes/loaikhoahocRoutes");
 app.use("/", authRoutes);
 app.use("/admin/coso", isAdmin,CoSoRoutes );
 app.use("/admin/loaikhoahoc", isAdmin, LoaiKhoaHocRoutes);
+app.use("/admin/khoahoc", isAdmin, KhoaHocRoutes);
 app.use("/admin", isAdmin, adminRoutes);
+app.use("/admin/user", isAdmin, UserRoutes);
+app.use("/admin/giangvien", isAdmin, GiangVienRoutes);
 
 
 

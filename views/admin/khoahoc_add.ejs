@@ -1,0 +1,154 @@
+<!-- views/admin/khoahoc_add.ejs -->
+<div class="container">
+  <h2 class="fw-bold mb-4">Thêm Khóa Học</h2>
+
+  <form id="khoaHocForm" action="/admin/khoahoc/add" method="POST">
+    <div class="mb-3">
+      <label class="form-label">Tên gốc khóa học</label>
+      <input type="text" name="tenKhoaHoc" class="form-control" placeholder="Ví dụ: TOEIC Lv1" required>
+      <small class="text-muted">Hệ thống sẽ tự thêm số thứ tự vào cuối.</small>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Loại khóa học</label>
+      <select name="loaiKhoaHoc" class="form-select" required>
+        <% DSLoai.forEach(l => { %>
+          <option value="<%= l._id %>"><%= l.tenLoai %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Cơ sở</label>
+      <select id="coSoSelect" name="coSo" class="form-select" required>
+        <option value="">-- Chọn cơ sở --</option>
+        <% DSCoso.forEach(cs => { %>
+          <option value="<%= cs._id %>"><%= cs.tenCoSo %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Phòng học mặc định</label>
+      <select id="phongHocSelect" name="phongHoc" class="form-select" required disabled>
+        <option value="">-- Chọn phòng học --</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Giảng viên</label>
+      <select name="giangVien" class="form-select" multiple required>
+        <% DSGiangVien.forEach(gv => { %>
+          <option value="<%= gv._id %>">
+            <%= gv.hoTen %>
+            <% if (gv.MaTaiKhoan?.email) { %> - <%= gv.MaTaiKhoan.email %><% } %>
+            <% if (gv.soDienThoai) { %> (<%= gv.soDienThoai %>)<% } %>
+          </option>
+        <% }) %>
+      </select>
+      <small class="text-muted">Giữ Ctrl để chọn nhiều giảng viên</small>
+    </div>
+
+    <!-- Lịch học: UI đơn giản thêm nhiều hàng -->
+    <div class="mb-3">
+      <label class="form-label">Lịch học (chọn các ngày trong tuần & giờ)</label>
+      <div id="lichList">
+        <!-- template sẽ clone -->
+      </div>
+      <button type="button" id="addLichBtn" class="btn btn-sm btn-outline-primary mb-2">Thêm ngày học</button>
+      <small class="text-muted d-block">Ví dụ: Thứ 2 (1) 18:00 - 20:00</small>
+    </div>
+
+    <!-- hidden input để chứa JSON của lichHoc -->
+    <input type="hidden" name="lichHocJson" id="lichHocJson">
+
+    <button type="submit" class="btn btn-primary">Tạo khóa học</button>
+    <a href="/admin/khoahoc" class="btn btn-secondary">Hủy</a>
+  </form>
+</div>
+
+<!-- Lịch template -->
+<template id="lichTemplate">
+  <div class="row gy-2 align-items-center mb-2 lich-row">
+    <div class="col-3">
+      <select class="form-select thu-select">
+        <option value="0">Chủ nhật (0)</option>
+        <option value="1">Thứ 2 (1)</option>
+        <option value="2">Thứ 3 (2)</option>
+        <option value="3">Thứ 4 (3)</option>
+        <option value="4">Thứ 5 (4)</option>
+        <option value="5">Thứ 6 (5)</option>
+        <option value="6">Thứ 7 (6)</option>
+      </select>
+    </div>
+    <div class="col-3">
+      <input class="form-control gioBatDau-input" type="time" value="18:00" />
+    </div>
+    <div class="col-3">
+      <input class="form-control gioKetThuc-input" type="time" value="20:00" />
+    </div>
+    <div class="col-3">
+      <button type="button" class="btn btn-danger btn-sm remove-lich">Xóa</button>
+    </div>
+  </div>
+</template>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const coSoSelect = document.getElementById("coSoSelect");
+  const phongSelect = document.getElementById("phongHocSelect");
+
+  coSoSelect.addEventListener("change", async function() {
+    const coSoId = this.value;
+    phongSelect.innerHTML = `<option value="">-- Chọn phòng học --</option>`;
+    phongSelect.disabled = true;
+
+    if (!coSoId) return;
+
+    const res = await fetch(`/admin/khoahoc/phong/${coSoId}`);
+    const data = await res.json();
+    data.forEach(ph => {
+      phongSelect.innerHTML += `<option value="${ph._id}">${ph.tenPhong} (Sức chứa: ${ph.sucChua || ph.soLuongToiDa || "-"})</option>`;
+    });
+    phongSelect.disabled = false;
+  });
+
+  // Lịch: thêm / xóa
+  const lichList = document.getElementById("lichList");
+  const addLichBtn = document.getElementById("addLichBtn");
+  const lichTemplate = document.getElementById("lichTemplate");
+
+  function addLichRow(defaultThu = "1", defaultStart = "18:00", defaultEnd = "20:00") {
+    const clone = lichTemplate.content.cloneNode(true);
+    const row = clone.querySelector(".lich-row");
+    row.querySelector(".thu-select").value = defaultThu;
+    row.querySelector(".gioBatDau-input").value = defaultStart;
+    row.querySelector(".gioKetThuc-input").value = defaultEnd;
+    row.querySelector(".remove-lich").addEventListener("click", () => row.remove());
+    lichList.appendChild(row);
+  }
+
+  addLichBtn.addEventListener("click", () => addLichRow());
+
+  // Thêm 1 row mặc định ban đầu
+  addLichRow();
+
+  // Trước khi submit: serialize lichList thành JSON và gán vào lichHocJson
+  const form = document.getElementById("khoaHocForm");
+  form.addEventListener("submit", function(e) {
+    const rows = lichList.querySelectorAll(".lich-row");
+    const lichArray = [];
+    rows.forEach(r => {
+      const thu = r.querySelector(".thu-select").value;
+      const gioBatDau = r.querySelector(".gioBatDau-input").value;
+      const gioKetThuc = r.querySelector(".gioKetThuc-input").value;
+      // push nếu valid
+      if (thu !== "" && gioBatDau && gioKetThuc) {
+        lichArray.push({ thu: Number(thu), gioBatDau, gioKetThuc });
+      }
+    });
+    document.getElementById("lichHocJson").value = JSON.stringify(lichArray);
+    // tiếp tục submit
+  });
+});
+</script>

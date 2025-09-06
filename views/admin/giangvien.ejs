@@ -1,0 +1,169 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Quản lý Giảng viên</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGiangVienModal">
+      <i class="bi bi-plus-circle"></i> Thêm Giảng viên
+    </button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Họ tên</th>
+          <th>Email</th>
+          <th>SĐT</th>
+          <th>Điểm TOEIC</th>
+          <th>Điểm IELTS</th>
+          <th class="text-center">Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% DSGiangVien.forEach((gv, i) => { %>
+          <tr>
+            <td><%= i+1 %></td>
+            <td><%= gv.hoTen %></td>
+            <td><%= gv.email %></td>
+            <td><%= gv.soDienThoai || "-" %></td>
+            <td><%= gv.diemTOEIC || "-" %></td>
+            <td><%= gv.diemIELTS || "-" %></td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editGiangVien-<%= gv._id %>">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <form action="/admin/giangvien/delete/<%= gv._id %>" method="POST" class="d-inline"
+                    onsubmit="return confirm('Xóa giảng viên này?')">
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Thêm giảng viên -->
+<div class="modal fade" id="addGiangVienModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <form action="/admin/giangvien/add" method="POST" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thêm Giảng viên</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Họ tên</label>
+            <input type="text" name="hoTen" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Ngày sinh</label>
+            <input type="date" name="ngaySinh" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Giới tính</label>
+            <select name="gioiTinh" class="form-select">
+              <option value="Nam">Nam</option>
+              <option value="Nữ">Nữ</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Số điện thoại</label>
+            <input type="text" name="soDienThoai" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Số Zalo</label>
+            <input type="text" name="soZalo" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Điểm TOEIC</label>
+            <input type="number" name="diemToeic" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Điểm IELTS</label>
+            <input type="number" step="0.5" name="diemIelts" class="form-control">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Địa chỉ</label>
+            <input type="text" name="diaChi" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Thêm mới</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Sửa giảng viên -->
+<% DSGiangVien.forEach(gv => { %>
+<div class="modal fade" id="editGiangVien-<%= gv._id %>" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <form action="/admin/giangvien/edit/<%= gv._id %>" method="POST" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Chỉnh sửa giảng viên</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Họ tên</label>
+            <input type="text" name="hoTen" class="form-control" value="<%= gv.hoTen %>" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Ngày sinh</label>
+            <input type="date" name="ngaySinh" class="form-control" value="<%= gv.ngaySinh ? gv.ngaySinh.toISOString().substring(0,10) : '' %>">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Giới tính</label>
+            <select name="gioiTinh" class="form-select">
+              <option value="Nam" <%= gv.gioiTinh==="Nam" ? "selected":"" %>>Nam</option>
+              <option value="Nữ" <%= gv.gioiTinh==="Nữ" ? "selected":"" %>>Nữ</option>
+              <option value="Khác" <%= gv.gioiTinh==="Khác" ? "selected":"" %>>Khác</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="<%= gv.email %>" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Số điện thoại</label>
+            <input type="text" name="soDienThoai" class="form-control" value="<%= gv.soDienThoai %>">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Số Zalo</label>
+            <input type="text" name="soZalo" class="form-control" value="<%= gv.soZalo %>">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Điểm TOEIC</label>
+            <input type="number" name="diemToeic" class="form-control" value="<%= gv.diemToeic %>">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Điểm IELTS</label>
+            <input type="number" step="0.5" name="diemIelts" class="form-control" value="<%= gv.diemIelts %>">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Địa chỉ</label>
+            <input type="text" name="diaChi" class="form-control" value="<%= gv.diaChi %>">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Lưu</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+      </div>
+    </form>
+  </div>
+</div>
+<% }) %>

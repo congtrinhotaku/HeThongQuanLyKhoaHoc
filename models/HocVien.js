@@ -12,7 +12,6 @@ const hocVienSchema = new Schema({
     soZalo: { type: String, unique: true },
     diaChi: { type: String },
     anhDaiDien: { type: String },
-    vaiTro: { type: String, enum: ["admin", "student", "teacher"], required: true ,default: "admin"},
     faceDescriptor: { type: [Number], default: [] },
 });
 
