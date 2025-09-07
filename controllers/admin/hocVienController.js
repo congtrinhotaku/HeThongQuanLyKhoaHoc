@@ -1,11 +1,11 @@
 // controllers/hocVienController.js
 const { exp } = require("@tensorflow/tfjs-node");
-const HocVien = require("../models/HocVien");
-const BuoiHoc = require("../models/BuoiHoc");
-const ThamGiaBuoiHoc = require("../models/ThamGiaBuoiHoc");
-const DangKyKhoaHoc = require("../models/DangKyKhoaHoc");
+const HocVien = require("../../models/HocVien");
+const BuoiHoc = require("../../models/BuoiHoc");
+const ThamGiaBuoiHoc = require("../../models/ThamGiaBuoiHoc");
+const DangKyKhoaHoc = require("../../models/DangKyKhoaHoc");
 
-const User = require("../models/User");
+const User = require("../../models/User");
 const fs = require("fs");
 
 // Danh sách học viên
@@ -207,7 +207,7 @@ exports.huyDangKy = async (req, res) => {
 
 
 
-exports.searchHocVien =  async (req, res) => {
+exports.searchHocVien = async (req, res) => {
   const { soDienThoai } = req.query;
   const hv = await HocVien.findOne({ soDienThoai }).lean();
   if (hv) res.json({ found: true, hocVien: hv });

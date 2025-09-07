@@ -1,7 +1,7 @@
 // routes/khoahocRoutes.js
 const express = require("express");
 const router = express.Router();
-const khoaHocController = require("../controllers/khoahocController");
+const khoaHocController = require("../../controllers/admin/khoahocController");
 
 router.get("/", khoaHocController.getAllKhoaHoc);
 router.get("/add", khoaHocController.getAddKhoaHoc);

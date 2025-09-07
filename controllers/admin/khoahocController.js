@@ -1,18 +1,18 @@
 // controllers/khoahocController.js
-const KhoaHoc = require("../models/KhoaHoc");
-const LoaiKhoaHoc = require("../models/LoaiKhoaHoc");
-const PhongHoc = require("../models/PhongHoc");
-const Lesson = require("../models/Lesson");
-const BuoiHoc = require("../models/BuoiHoc");
-const DangKyKhoaHoc = require("../models/DangKyKhoaHoc");
-const GiangVien = require("../models/GiangVien");
-const CoSo = require("../models/CoSo");
+const KhoaHoc = require("../../models/KhoaHoc");
+const LoaiKhoaHoc = require("../../models/LoaiKhoaHoc");
+const PhongHoc = require("../../models/PhongHoc");
+const Lesson = require("../../models/Lesson");
+const BuoiHoc = require("../../models/BuoiHoc");
+const DangKyKhoaHoc = require("../../models/DangKyKhoaHoc");
+const GiangVien = require("../../models/GiangVien");
+const CoSo = require("../../models/CoSo");
 
 function nextDateForWeekday(fromDate, targetWeekday) {
   // từ fromDate (Date) tìm ngày tiếp theo có day == targetWeekday (0=CN,...6=Thứ 7)
   const d = new Date(fromDate);
   // reset time to 00:00:00 để so sánh ngày
-  d.setHours(0,0,0,0);
+  d.setHours(0, 0, 0, 0);
   let add = (targetWeekday - d.getDay() + 7) % 7;
   if (add === 0) return d; // nếu cùng thứ, trả luôn ngày đó
   d.setDate(d.getDate() + add);
@@ -287,83 +287,83 @@ exports.getChiTietKhoaHoc = async (req, res) => {
 
 
 
-  // Cập nhật thông tin khóa học (chỉ tên, trạng thái, giảng viên)
-  exports.postUpdateKhoaHoc = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { tenKhoaHoc, trangThai, giangVien } = req.body;
+// Cập nhật thông tin khóa học (chỉ tên, trạng thái, giảng viên)
+exports.postUpdateKhoaHoc = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { tenKhoaHoc, trangThai, giangVien } = req.body;
 
-      // đảm bảo giảng viên là mảng
-      let gvArray = [];
-      if (Array.isArray(giangVien)) {
-        gvArray = giangVien;
-      } else if (typeof giangVien === "string" && giangVien.trim() !== "") {
-        gvArray = [giangVien];
-      }
+    // đảm bảo giảng viên là mảng
+    let gvArray = [];
+    if (Array.isArray(giangVien)) {
+      gvArray = giangVien;
+    } else if (typeof giangVien === "string" && giangVien.trim() !== "") {
+      gvArray = [giangVien];
+    }
 
-      await KhoaHoc.findByIdAndUpdate(id, {
-        tenKhoaHoc,
-        trangThai,
-        giangVien: gvArray
+    await KhoaHoc.findByIdAndUpdate(id, {
+      tenKhoaHoc,
+      trangThai,
+      giangVien: gvArray
+    });
+
+    // redirect về trang chi tiết
+    res.redirect(`/admin/khoahoc/${id}`);
+  } catch (err) {
+    console.error("Lỗi postUpdateKhoaHoc:", err);
+    res.redirect("/admin/khoahoc");
+  }
+};
+
+// Xóa một buổi học và lùi lesson
+exports.deleteBuoiHoc = async (req, res) => {
+  try {
+    const { khoaHocId, buoiId } = req.params;
+
+    // lấy tất cả buổi học của khóa học
+    const dsBuoi = await BuoiHoc.find({ khoaHoc: khoaHocId }).sort({ ngayHoc: 1 }).exec();
+
+    // tìm buổi bị xóa
+    const index = dsBuoi.findIndex(b => b._id.toString() === buoiId);
+    if (index === -1) return res.redirect(`/admin/khoahoc/${khoaHocId}`);
+
+    // xóa buổi học
+    await BuoiHoc.findByIdAndDelete(buoiId);
+
+    // lùi lesson cho các buổi sau
+    for (let i = index + 1; i < dsBuoi.length; i++) {
+      const buoiTruoc = dsBuoi[i - 1];
+      const buoiSau = dsBuoi[i];
+      await BuoiHoc.findByIdAndUpdate(buoiSau._id, {
+        lesson: buoiTruoc.lesson
       });
-
-      // redirect về trang chi tiết
-      res.redirect(`/admin/khoahoc/${id}`);
-    } catch (err) {
-      console.error("Lỗi postUpdateKhoaHoc:", err);
-      res.redirect("/admin/khoahoc");
     }
-  };
 
-  // Xóa một buổi học và lùi lesson
-  exports.deleteBuoiHoc = async (req, res) => {
-    try {
-      const { khoaHocId, buoiId } = req.params;
+    // tạo buổi học mới ở cuối với lesson cuối cùng
+    const khoaHoc = await KhoaHoc.findById(khoaHocId).lean();
+    const lastBuoi = await BuoiHoc.findOne({ khoaHoc: khoaHocId }).sort({ ngayHoc: -1 }).lean();
 
-      // lấy tất cả buổi học của khóa học
-      const dsBuoi = await BuoiHoc.find({ khoaHoc: khoaHocId }).sort({ ngayHoc: 1 }).exec();
+    // lấy lesson cuối cùng (theo số lượng lesson trong loại khóa học)
+    const lessons = await Lesson.find({ LoaikhoaHoc: khoaHoc.loaiKhoaHoc }).sort({ _id: 1 }).lean();
+    const lessonCuoi = lessons[lessons.length - 1];
 
-      // tìm buổi bị xóa
-      const index = dsBuoi.findIndex(b => b._id.toString() === buoiId);
-      if (index === -1) return res.redirect(`/admin/khoahoc/${khoaHocId}`);
+    if (lastBuoi) {
+      const ngayMoi = new Date(lastBuoi.ngayHoc);
+      ngayMoi.setDate(ngayMoi.getDate() + 7); // tạm: tạo 1 tuần sau buổi cuối
 
-      // xóa buổi học
-      await BuoiHoc.findByIdAndDelete(buoiId);
-
-      // lùi lesson cho các buổi sau
-      for (let i = index + 1; i < dsBuoi.length; i++) {
-        const buoiTruoc = dsBuoi[i - 1];
-        const buoiSau = dsBuoi[i];
-        await BuoiHoc.findByIdAndUpdate(buoiSau._id, {
-          lesson: buoiTruoc.lesson
-        });
-      }
-
-      // tạo buổi học mới ở cuối với lesson cuối cùng
-      const khoaHoc = await KhoaHoc.findById(khoaHocId).lean();
-      const lastBuoi = await BuoiHoc.findOne({ khoaHoc: khoaHocId }).sort({ ngayHoc: -1 }).lean();
-
-      // lấy lesson cuối cùng (theo số lượng lesson trong loại khóa học)
-      const lessons = await Lesson.find({ LoaikhoaHoc: khoaHoc.loaiKhoaHoc }).sort({ _id: 1 }).lean();
-      const lessonCuoi = lessons[lessons.length - 1];
-
-      if (lastBuoi) {
-        const ngayMoi = new Date(lastBuoi.ngayHoc);
-        ngayMoi.setDate(ngayMoi.getDate() + 7); // tạm: tạo 1 tuần sau buổi cuối
-
-        await BuoiHoc.create({
-          khoaHoc: khoaHocId,
-          lesson: lessonCuoi._id,
-          phongHoc: khoaHoc.phongHoc,
-          ngayHoc: ngayMoi,
-          gioBatDau: lastBuoi.gioBatDau,
-          gioKetThuc: lastBuoi.gioKetThuc
-        });
-      }
-
-      res.redirect(`/admin/khoahoc/${khoaHocId}`);
-    } catch (err) {
-      console.error("Lỗi deleteBuoiHoc:", err);
-      res.redirect("/admin/khoahoc");
+      await BuoiHoc.create({
+        khoaHoc: khoaHocId,
+        lesson: lessonCuoi._id,
+        phongHoc: khoaHoc.phongHoc,
+        ngayHoc: ngayMoi,
+        gioBatDau: lastBuoi.gioBatDau,
+        gioKetThuc: lastBuoi.gioKetThuc
+      });
     }
-  };
+
+    res.redirect(`/admin/khoahoc/${khoaHocId}`);
+  } catch (err) {
+    console.error("Lỗi deleteBuoiHoc:", err);
+    res.redirect("/admin/khoahoc");
+  }
+};

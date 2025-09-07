@@ -2,13 +2,13 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const canvas = require("canvas");
-const faceapi = require("../config/faceapi");
-const HocVien = require("../models/HocVien");
-const BuoiHoc = require("../models/BuoiHoc");
-const ThamGiaBuoiHoc = require("../models/ThamGiaBuoiHoc");
-const DangKyKhoaHoc = require("../models/DangKyKhoaHoc");
+const faceapi = require("../../config/faceapi");
+const HocVien = require("../../models/HocVien");
+const BuoiHoc = require("../../models/BuoiHoc");
+const ThamGiaBuoiHoc = require("../../models/ThamGiaBuoiHoc");
+const DangKyKhoaHoc = require("../../models/DangKyKhoaHoc");
 const { image } = require("@tensorflow/tfjs");
-const recognizeFace = require("../middlewares/faceRecognition");
+const recognizeFace = require("../../middlewares/faceRecognition");
 
 
 const upload = multer({ dest: "uploads/" });
@@ -33,8 +33,8 @@ exports.postDiemDanh = [
 
       // giờ hiện tại theo VN
       const nowVN = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }));
-      const startOfDay = new Date(nowVN); startOfDay.setHours(0,0,0,0);
-      const endOfDay = new Date(nowVN); endOfDay.setHours(23,59,59,999);
+      const startOfDay = new Date(nowVN); startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(nowVN); endOfDay.setHours(23, 59, 59, 999);
 
       // tìm buổi học trong ngày
       const buoiHoc = await BuoiHoc.findOne({

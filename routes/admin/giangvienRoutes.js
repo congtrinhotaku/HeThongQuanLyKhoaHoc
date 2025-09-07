@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const giangvienController = require("../controllers/giangvienController");
+const giangvienController = require("../../controllers/admin/giangvienController");
 
 // Danh sách giảng viên
 router.get("/", giangvienController.getAllGiangVien);

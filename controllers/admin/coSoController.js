@@ -1,5 +1,5 @@
-const CoSo = require("../models/CoSo");
-const PhongHoc = require("../models/PhongHoc");
+const CoSo = require("../../models/CoSo");
+const PhongHoc = require("../../models/PhongHoc");
 
 // Danh sách cơ sở
 exports.getAllCoSo = async (req, res) => {

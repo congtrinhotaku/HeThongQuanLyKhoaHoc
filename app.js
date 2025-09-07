@@ -56,14 +56,17 @@ app.use(session({
 }));
 
 const authRoutes = require("./routes/authRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const CoSoRoutes = require("./routes/coSoRoutes.js");
-const LoaiKhoaHocRoutes = require("./routes/loaikhoahocRoutes");
-const KhoaHocRoutes = require("./routes/khoahocRoutes");
-const UserRoutes = require("./routes/userRoutes");
-const GiangVienRoutes = require("./routes/giangvienRoutes");
-const HocVienRoutes = require("./routes/hocvienRoutes"); 
-const kioskRoutes = require("./routes/kioskRoutes");
+const CoSoRoutes = require("./routes/admin/coSoRoutes");
+const LoaiKhoaHocRoutes = require("./routes/admin/loaikhoahocRoutes");
+const KhoaHocRoutes = require("./routes/admin/khoahocRoutes");
+const adminRoutes = require("./routes/admin/adminRoutes");
+const UserRoutes = require("./routes/admin/userRoutes");
+const GiangVienRoutes = require("./routes/admin/giangvienRoutes");
+const HocVienRoutes = require("./routes/admin/hocvienRoutes");
+const kioskRoutes = require("./routes/admin/kioskRoutes");
+
+
+
 
 app.use("/", authRoutes);
 app.use("/admin/coso", isAdmin, CoSoRoutes);

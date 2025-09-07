@@ -1,5 +1,5 @@
-const LoaiKhoaHoc = require("../models/LoaiKhoaHoc");
-const Lesson = require("../models/Lesson");
+const LoaiKhoaHoc = require("../../models/LoaiKhoaHoc");
+const Lesson = require("../../models/Lesson");
 
 // Danh sách loại khóa học
 exports.getAllLoai = async (req, res) => {

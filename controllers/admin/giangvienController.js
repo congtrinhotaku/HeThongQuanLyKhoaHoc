@@ -1,5 +1,5 @@
-const GiangVien = require("../models/GiangVien");
-const User = require("../models/User");
+const GiangVien = require("../../models/GiangVien");
+const User = require("../../models/User");
 
 // Danh sách giảng viên
 exports.getAllGiangVien = async (req, res) => {

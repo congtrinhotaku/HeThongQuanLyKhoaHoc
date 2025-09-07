@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const loaiController = require("../controllers/loaikhoahocController");
-const isAdmin = require("../middlewares/isAdmin");
+const loaiController = require("../../controllers/admin/loaikhoahocController");
+const isAdmin = require("../../middlewares/isAdmin");
 
 router.get("/", isAdmin, loaiController.getAllLoai);
 router.post("/add", isAdmin, loaiController.addLoai);
