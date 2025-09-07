@@ -1,7 +1,10 @@
 // controllers/hocVienController.js
 const { exp } = require("@tensorflow/tfjs-node");
 const HocVien = require("../models/HocVien");
-DangKyKhoaHoc = require("../models/DangKyKhoaHoc");
+const BuoiHoc = require("../models/BuoiHoc");
+const ThamGiaBuoiHoc = require("../models/ThamGiaBuoiHoc");
+const DangKyKhoaHoc = require("../models/DangKyKhoaHoc");
+
 const User = require("../models/User");
 const fs = require("fs");
 
@@ -123,18 +126,45 @@ exports.deleteHocVien = async (req, res) => {
 };
 exports.dangKyKhoaHoc = async (req, res) => {
   try {
-    const { soDienThoai } = req.body;  
+    const { soDienThoai } = req.body;
     const khoaHocId = req.params.id;
 
+    // 1. tìm học viên
     const hv = await HocVien.findOne({ soDienThoai });
     if (!hv) {
-      return res.status(400).send("Học viên không tồn tại");
+      return res.status(400).send("❌ Học viên không tồn tại");
     }
 
-    await DangKyKhoaHoc.create({
+    // 2. kiểm tra đã đăng ký chưa
+    const daDK = await DangKyKhoaHoc.findOne({
       hocVien: hv._id,
-      khoaHoc: khoaHocId
+      khoaHoc: khoaHocId,
+      trangThai: { $ne: "Hủy" }
     });
+    if (daDK) {
+      return res.status(400).send("❌ Học viên đã đăng ký khóa học này");
+    }
+
+    // 3. tạo bản ghi đăng ký
+    const dangKy = await DangKyKhoaHoc.create({
+      hocVien: hv._id,
+      khoaHoc: khoaHocId,
+      trangThai: "Đang học"
+    });
+
+    // 4. lấy tất cả buổi học của khóa
+    const dsBuoiHoc = await BuoiHoc.find({ khoaHoc: khoaHocId });
+
+    // 5. tạo tham gia buổi học cho học viên này
+    const thamGiaDocs = dsBuoiHoc.map(bh => ({
+      hocVien: hv._id,
+      buoiHoc: bh._id,
+      trangThai: "chưa"
+    }));
+
+    if (thamGiaDocs.length > 0) {
+      await ThamGiaBuoiHoc.insertMany(thamGiaDocs);
+    }
 
     res.redirect(`/admin/khoahoc/${khoaHocId}`);
   } catch (err) {
@@ -143,19 +173,30 @@ exports.dangKyKhoaHoc = async (req, res) => {
   }
 };
 
+
+
 exports.huyDangKy = async (req, res) => {
   try {
     const { dkId, khoaHocId } = req.params;
 
-    // Tìm đăng ký
+    // 1. Tìm đăng ký
     const dangKy = await DangKyKhoaHoc.findById(dkId);
     if (!dangKy) {
       return res.status(404).send("Đăng ký không tồn tại");
     }
 
-    // Cập nhật trạng thái
+    // 2. Cập nhật trạng thái đăng ký thành Hủy
     dangKy.trangThai = "Hủy";
     await dangKy.save();
+
+    // 3. Lấy tất cả buổi học thuộc khóa này
+    const dsBuoiHoc = await BuoiHoc.find({ khoaHoc: khoaHocId }).select("_id");
+
+    // 4. Xóa tất cả tham gia buổi học của học viên này trong khóa học
+    await ThamGiaBuoiHoc.deleteMany({
+      hocVien: dangKy.hocVien,
+      buoiHoc: { $in: dsBuoiHoc.map(b => b._id) }
+    });
 
     res.redirect(`/admin/khoahoc/${khoaHocId}`);
   } catch (err) {
@@ -163,6 +204,7 @@ exports.huyDangKy = async (req, res) => {
     res.redirect(`/admin/khoahoc/${req.params.khoaHocId}`);
   }
 };
+
 
 
 exports.searchHocVien =  async (req, res) => {
