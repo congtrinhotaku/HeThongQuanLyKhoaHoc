@@ -1,0 +1,36 @@
+<div class="container mt-4">
+    <h3>
+        Chi tiết buổi: <%= buoi.lesson ? buoi.lesson.tenLesson : "Buổi học" %>
+    </h3>
+
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Họ tên</th>
+                <th>SĐT</th>
+            </tr>
+        </thead>
+<tbody>
+    <% if (danhSach.length> 0) { %>
+        <% danhSach.forEach((d, index)=> { %>
+            <tr>
+                <td>
+                    <%= index + 1 %>
+                </td>
+                <td>
+                    <%= d.hocVien ? d.hocVien.hoTen : "" %>
+                </td>
+                <td>
+                    <%= d.hocVien ? d.hocVien.soDienThoai : "" %>
+                </td>
+            </tr>
+            <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="3" class="text-center">Chưa có học viên tham gia</td>
+                    </tr>
+                    <% } %>
+</tbody>
+    </table>
+</div>

@@ -80,25 +80,35 @@
           <th class="text-center">Hành động</th>
         </tr>
       </thead>
-      <tbody>
-        <% dsBuoi.forEach((b, index) => { %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <td><%= new Date(b.ngayHoc).toLocaleDateString("vi-VN") %></td>
-            <td><%= b.gioBatDau %></td>
-            <td><%= b.gioKetThuc %></td>
-            <td><%= b.lesson ? b.lesson.tenLesson : "-" %></td>
-            <td class="text-center">
-              <form action="/admin/khoahoc/<%= khoaHoc._id %>/buoi/delete/<%= b._id %>" method="POST"
-                onsubmit="return confirm('Xóa buổi này? Các lesson phía sau sẽ lùi lại.')">
-                <button type="submit" class="btn btn-sm btn-danger">
-                  <i class="bi bi-trash"></i> Xóa
-                </button>
-              </form>
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
+<tbody>
+  <% dsBuoi.forEach((b, index) => { %>
+    <tr>
+      <td><%= index + 1 %></td>
+      <td><%= new Date(b.ngayHoc).toLocaleDateString("vi-VN") %></td>
+      <td><%= b.gioBatDau %></td>
+      <td><%= b.gioKetThuc %></td>
+      <td><%= b.lesson ? b.lesson.tenLesson : "-" %></td>
+      <td class="text-center">
+        <!-- Nếu ngày học nhỏ hơn ngày hiện tại thì thêm nút xem chi tiết -->
+        <% if (new Date(b.ngayHoc) < new Date()) { %>
+          <a href="/admin/khoahoc/<%= khoaHoc._id %>/buoi/<%= b._id %>" 
+             class="btn btn-sm btn-info me-1">
+            <i class="bi bi-eye"></i> Xem chi tiết
+          </a>
+        <% } %>
+
+        <!-- Nút xóa -->
+        <form action="/admin/khoahoc/<%= khoaHoc._id %>/buoi/delete/<%= b._id %>" method="POST"
+          onsubmit="return confirm('Xóa buổi này? Các lesson phía sau sẽ lùi lại.')" style="display:inline-block">
+          <button type="submit" class="btn btn-sm btn-danger">
+            <i class="bi bi-trash"></i> Xóa
+          </button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+</tbody>
+
     </table>
   </div>
 

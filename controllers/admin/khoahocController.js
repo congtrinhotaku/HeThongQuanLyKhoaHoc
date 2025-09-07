@@ -7,6 +7,10 @@ const BuoiHoc = require("../../models/BuoiHoc");
 const DangKyKhoaHoc = require("../../models/DangKyKhoaHoc");
 const GiangVien = require("../../models/GiangVien");
 const CoSo = require("../../models/CoSo");
+const Hocvien = require("../../models/HocVien");
+const ThamGiaBuoiHoc = require("../../models/ThamGiaBuoiHoc");
+
+
 
 function nextDateForWeekday(fromDate, targetWeekday) {
   // từ fromDate (Date) tìm ngày tiếp theo có day == targetWeekday (0=CN,...6=Thứ 7)
@@ -365,5 +369,35 @@ exports.deleteBuoiHoc = async (req, res) => {
   } catch (err) {
     console.error("Lỗi deleteBuoiHoc:", err);
     res.redirect("/admin/khoahoc");
+  }
+};
+//chi tiet buoi hoc
+exports.chiTietBuoi = async (req, res) => {
+  try {
+    const { id, buoiId } = req.params;
+
+    // Lấy buổi học
+    const buoi = await BuoiHoc.findById(buoiId).populate("lesson");
+    if (!buoi) {
+      return res.status(404).send("Không tìm thấy buổi học");
+    }
+
+    // Lấy danh sách tham gia buổi học
+    const danhSach = await ThamGiaBuoiHoc.find({ buoiHoc: buoiId })
+      .populate("hocVien") // phải populate để lấy hoTen, soDienThoai
+      .lean();
+
+    console.log(">>> Danh sách:", danhSach); // DEBUG xem có dữ liệu không
+
+    res.render("admin/chitietBuoi", {
+      layout: "layouts/main",
+      title: "Chi tiết buổi học",
+      buoi,
+      danhSach,
+      user: req.user || null
+    });
+  } catch (error) {
+    console.error("Lỗi khi xem chi tiết buổi học:", error);
+    res.status(500).send("Lỗi server khi tải chi tiết buổi học");
   }
 };

@@ -43,7 +43,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(methodOverride("_method"));
 app.use(expressLayouts);
 app.set("layout", "layouts/main"); 
-
+app.use((req, res, next) => {
+  res.locals.title = "Hệ thống quản lý khóa học"; // title mặc định
+  next();
+});
 // Session
 app.use(session({
   secret: process.env.SESSION_SECRET || "supersecret",
