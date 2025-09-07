@@ -21,54 +21,74 @@
         </tr>
       </thead>
       <tbody>
-        <% DSKhoaHoc.forEach((kh, index) => { %>
+        <% DSKhoaHoc.forEach((kh, index)=> { %>
           <tr>
-            <td><%= index + 1 %></td>
-            <td><%= kh.tenKhoaHoc %></td>
-            <td><%= kh.loaiKhoaHoc ? kh.loaiKhoaHoc.tenLoai : "-" %></td>
             <td>
-              <% if (kh.giangVien && kh.giangVien.length > 0) { %>
-                <% kh.giangVien.forEach(gv => { %>
-                  <span class="badge bg-primary me-1"><%= gv.hoTen %></span>
-                <% }) %>
-              <% } else { %>
-                <span class="text-muted">-</span>
-              <% } %>
+              <%= index + 1 %>
             </td>
-            <td><%= kh.soLuongDangKy %> / <%= kh.soLuongToiDa || "-" %></td>
             <td>
-              <% if (kh.lichHoc && kh.lichHoc.length > 0) { %>
-                <% kh.lichHoc.forEach(lh => { %>
-                  <span class="badge bg-info text-dark me-1">
-                    Thứ <%= lh.thu %> (<%= lh.gioBatDau %> - <%= lh.gioKetThuc %>)
+              <%= kh.tenKhoaHoc %>
+            </td>
+            <td>
+              <%= kh.loaiKhoaHoc ? kh.loaiKhoaHoc.tenLoai : "-" %>
+            </td>
+            <td>
+              <% if (kh.giangVien && kh.giangVien.length> 0) { %>
+                <% kh.giangVien.forEach(gv=> { %>
+                  <span class="badge bg-primary me-1">
+                    <%= gv.hoTen %>
                   </span>
-                <% }) %>
-              <% } else { %>
-                <span class="text-muted">Chưa có</span>
-              <% } %>
+                  <% }) %>
+                    <% } else { %>
+                      <span class="text-muted">-</span>
+                      <% } %>
             </td>
             <td>
-              <% if (kh.trangThaiThucTe === "Chưa bắt đầu") { %>
-                <span class="badge bg-secondary"><%= kh.trangThaiThucTe %></span>
-              <% } else if (kh.trangThaiThucTe === "Đang diễn ra") { %>
-                <span class="badge bg-success"><%= kh.trangThaiThucTe %></span>
-              <% } else { %>
-                <span class="badge bg-danger"><%= kh.trangThaiThucTe %></span>
-              <% } %>
+              <%= kh.soLuongDangKy %> / <%= kh.soLuongToiDa || "-" %>
+            </td>
+            <td>
+              <% if (kh.lichHoc && kh.lichHoc.length> 0) { %>
+                <% kh.lichHoc.forEach(lh=> { %>
+                  <% let thuText="" ; switch (lh.thu) { case 0: thuText="Chủ nhật" ; break; case 1: thuText="Thứ 2" ;
+                    break; case 2: thuText="Thứ 3" ; break; case 3: thuText="Thứ 4" ; break; case 4: thuText="Thứ 5" ;
+                    break; case 5: thuText="Thứ 6" ; break; case 6: thuText="Thứ 7" ; break; } %>
+
+                    <span class="badge bg-info text-dark me-1">
+                      <%= thuText %> (<%= lh.gioBatDau %> - <%= lh.gioKetThuc %>)
+                    </span>
+                    <% }) %>
+                      <% } else { %>
+                        <span class="text-muted">Chưa có</span>
+                        <% } %>
+            </td>
+            <td>
+              <% if (kh.trangThaiThucTe==="Chưa bắt đầu" ) { %>
+                <span class="badge bg-secondary">
+                  <%= kh.trangThaiThucTe %>
+                </span>
+                <% } else if (kh.trangThaiThucTe==="Đang diễn ra" ) { %>
+                  <span class="badge bg-success">
+                    <%= kh.trangThaiThucTe %>
+                  </span>
+                  <% } else { %>
+                    <span class="badge bg-danger">
+                      <%= kh.trangThaiThucTe %>
+                    </span>
+                    <% } %>
             </td>
             <td class="text-center">
               <a href="/admin/khoahoc/<%= kh._id %>" class="btn btn-sm btn-warning">
                 <i class="bi bi-pencil-square"></i>
               </a>
               <form action="/admin/khoahoc/delete/<%= kh._id %>" method="POST" class="d-inline"
-                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa khóa học này không?')">
+                onsubmit="return confirm('Bạn có chắc chắn muốn xóa khóa học này không?')">
                 <button type="submit" class="btn btn-sm btn-danger">
                   <i class="bi bi-trash"></i>
                 </button>
               </form>
             </td>
           </tr>
-        <% }) %>
+          <% }) %>
       </tbody>
     </table>
   </div>
