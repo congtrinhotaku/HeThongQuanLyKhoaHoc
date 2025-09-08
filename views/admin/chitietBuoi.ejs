@@ -9,28 +9,34 @@
                 <th>STT</th>
                 <th>Họ tên</th>
                 <th>SĐT</th>
+                <th>Trạng thái</th>
             </tr>
         </thead>
-<tbody>
-    <% if (danhSach.length> 0) { %>
-        <% danhSach.forEach((d, index)=> { %>
-            <tr>
-                <td>
-                    <%= index + 1 %>
-                </td>
-                <td>
-                    <%= d.hocVien ? d.hocVien.hoTen : "" %>
-                </td>
-                <td>
-                    <%= d.hocVien ? d.hocVien.soDienThoai : "" %>
-                </td>
-            </tr>
-            <% }) %>
-                <% } else { %>
+        <tbody>
+            <% if (danhSach.length> 0) { %>
+                <% danhSach.forEach((d, index)=> { %>
                     <tr>
-                        <td colspan="3" class="text-center">Chưa có học viên tham gia</td>
+                        <td>
+                            <%= index + 1 %>
+                        </td>
+                        <td>
+                            <%= d.hocVien ? d.hocVien.hoTen : "" %>
+                        </td>
+                        <td>
+                            <%= d.hocVien ? d.hocVien.soDienThoai : "" %>
+                        </td>
+                        <td>
+                            <%= d.trangThai %>
+                        </td>
+
+
                     </tr>
-                    <% } %>
-</tbody>
+                    <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="4" class="text-center">Chưa có học viên tham gia</td>
+                            </tr>
+                            <% } %>
+        </tbody>
     </table>
 </div>
