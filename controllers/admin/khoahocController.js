@@ -388,13 +388,19 @@ exports.chiTietBuoi = async (req, res) => {
       .lean();
 
     console.log(">>> Danh sách:", danhSach); // DEBUG xem có dữ liệu không
+    const tongSo = danhSach.length;
+
+    // Số học viên có mặt
+    const daDiemDanh = danhSach.filter(d => d.trangThai === "Có mặt").length;
 
     res.render("admin/chitietBuoi", {
       layout: "layouts/main",
       title: "Chi tiết buổi học",
       buoi,
       danhSach,
-      user: req.user || null
+      user: req.user || null,
+      tongSo,
+      daDiemDanh
     });
   } catch (error) {
     console.error("Lỗi khi xem chi tiết buổi học:", error);
