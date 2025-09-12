@@ -1,0 +1,32 @@
+<div class="content">
+    <h2>THÔNG TIN CÁ NHÂN</h2>
+    <div class="profile-info">
+        <div class="left">
+            <p><b>Tên:</b>
+                <%= hocVien.hoTen %>
+            </p>
+            <p><b>Ngày sinh:</b>
+                <%= hocVien.ngaySinh ? hocVien.ngaySinh.toLocaleDateString("vi-VN") : "" %>
+            </p>
+            <p><b>Giới tính:</b>
+                <%= hocVien.gioiTinh %>
+            </p>
+            <p><b>Email:</b>
+                <%= hocVien.email %>
+            </p>
+            <p><b>Số điện thoại:</b>
+                <%= hocVien.soDienThoai %>
+            </p>
+            <p><b>Số Zalo:</b>
+                <%= hocVien.soZalo %>
+            </p>
+            <p><b>Địa chỉ:</b>
+                <%= hocVien.diaChi %>
+            </p>
+        </div>
+
+        <div class="right">
+            <img src="<%= hocVien.anhDaiDien || '/images/default-avatar.png' %>" alt="Ảnh đại diện" width="150">
+            <p>Ảnh đại diện</p>
+        </div>
+    </div>
