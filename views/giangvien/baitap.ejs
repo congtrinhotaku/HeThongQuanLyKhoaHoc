@@ -1,0 +1,183 @@
+<div class="container">
+    <h2 class="fw-bold mb-4">Quản lý Bài Tập</h2>
+
+    <!-- Form thêm/chỉnh sửa bài tập -->
+    <div class="card p-4 shadow-sm mb-5">
+        <h5 class="mb-3">Thêm Bài Tập</h5>
+        <form action="/admin/baitap/add" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Khóa học</label>
+                <select name="khoaHoc" class="form-select" required>
+                    <% khoaHocs.forEach(kh=> { %>
+                        <option value="<%= kh._id %>">
+                            <%= kh.tenKhoaHoc %>
+                        </option>
+                        <% }) %>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tiêu đề</label>
+                <input type="text" name="tieuDe" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nội dung</label>
+                <textarea name="noiDung" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">File đính kèm</label>
+                <input type="file" name="fileDinhKem" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Hạn nộp</label>
+                <input type="date" name="hanNop" class="form-control">
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Thêm Bài Tập</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Danh sách bài tập -->
+    <div class="card p-4 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5>Danh sách Bài Tập</h5>
+            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addBaiTapModal">
+                <i class="bi bi-plus-circle"></i> Thêm bài tập
+            </button>
+        </div>
+
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Tiêu đề</th>
+                    <th>Khóa học</th>
+                    <th>Hạn nộp</th>
+                    <th>File</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% baitaps.forEach((bt, index)=> { %>
+                    <tr>
+                        <td>
+                            <%= index + 1 %>
+                        </td>
+                        <td>
+                            <%= bt.tieuDe %>
+                        </td>
+                        <td>
+                            <%= bt.khoaHoc ? bt.khoaHoc.tenKhoaHoc : "-" %>
+                        </td>
+                        <td>
+                            <%= bt.hanNop ? bt.hanNop.toLocaleDateString("vi-VN") : "-" %>
+                        </td>
+                        <td>
+                            <% if (bt.fileDinhKem) { %>
+                                <a href="/uploads/<%= bt.fileDinhKem %>" target="_blank">Xem file</a>
+                                <% } else { %>
+                                    -
+                                    <% } %>
+                        </td>
+                        <td class="text-center">
+                            <!-- Nút sửa -->
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                data-bs-target="#editBaiTapModal-<%= bt._id %>">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <!-- Nút xóa -->
+                            <form action="/admin/baitap/<%= bt._id %>/delete" method="POST" class="d-inline"
+                                onsubmit="return confirm('Bạn chắc chắn muốn xóa bài tập này?')">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <!-- Modal sửa bài tập -->
+                    <div class="modal fade" id="editBaiTapModal-<%= bt._id %>" tabindex="-1">
+                        <div class="modal-dialog">
+                            <form action="/admin/baitap/<%= bt._id %>/edit" method="POST" enctype="multipart/form-data"
+                                class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Chỉnh sửa Bài Tập</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tiêu đề</label>
+                                        <input type="text" name="tieuDe" class="form-control" value="<%= bt.tieuDe %>"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nội dung</label>
+                                        <textarea name="noiDung" class="form-control"
+                                            rows="3"><%= bt.noiDung %></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Hạn nộp</label>
+                                        <input type="date" name="hanNop" class="form-control"
+                                            value="<%= bt.hanNop ? bt.hanNop.toISOString().split('T')[0] : "" %>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">File đính kèm (nếu muốn thay)</label>
+                                        <input type="file" name="fileDinhKem" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Lưu</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal thêm bài tập -->
+<div class="modal fade" id="addBaiTapModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="/admin/baitap/add" method="POST" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Bài Tập</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Khóa học</label>
+                    <select name="khoaHoc" class="form-select" required>
+                        <% khoaHocs.forEach(kh=> { %>
+                            <option value="<%= kh._id %>">
+                                <%= kh.tenKhoaHoc %>
+                            </option>
+                            <% }) %>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tiêu đề</label>
+                    <input type="text" name="tieuDe" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nội dung</label>
+                    <textarea name="noiDung" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">File đính kèm</label>
+                    <input type="file" name="fileDinhKem" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Hạn nộp</label>
+                    <input type="date" name="hanNop" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Thêm</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>

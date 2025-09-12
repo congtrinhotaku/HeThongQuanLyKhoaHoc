@@ -67,7 +67,8 @@ const UserRoutes = require("./routes/admin/userRoutes");
 const GiangVienRoutes = require("./routes/admin/giangvienRoutes");
 const HocVienRoutes = require("./routes/admin/hocvienRoutes");
 const kioskRoutes = require("./routes/admin/kioskRoutes");
-
+const BaiTapRoutes = require("./routes/giangvien/baitapRoutes");
+const indexgiangvien = require("./routes/giangvien/indexRoutes");
 
 
 
@@ -80,8 +81,8 @@ app.use("/admin/user", isAdmin, UserRoutes);
 app.use("/admin/giangvien", isAdmin, GiangVienRoutes);
 app.use("/admin/hocvien", isAdmin, HocVienRoutes); 
 app.use("/kiosk", kioskRoutes);
-
-
+app.use("/giangvien", indexgiangvien);
+app.use("/giangvien/baitap", BaiTapRoutes);
 
 
 // 404 handler
