@@ -1,0 +1,65 @@
+<div class="container mt-5">
+    <h2 class="mb-4 fw-bold text-center">Chi tiết khóa học: <%= khoaHoc.tenKhoaHoc %>
+    </h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <p><strong>Thời gian:</strong>
+                <%= khoaHoc.thoiGianBatDau ? khoaHoc.thoiGianBatDau.toLocaleDateString("vi-VN") : "?" %>
+                    -
+                    <%= khoaHoc.thoiGianKetThuc ? khoaHoc.thoiGianKetThuc.toLocaleDateString("vi-VN") : "?" %>
+            </p>
+            <p><strong>Học phí:</strong>
+                <%= khoaHoc.hocPhi ? khoaHoc.hocPhi.toLocaleString("vi-VN") + " đ" : "N/A" %>
+            </p>
+            <p><strong>Trạng thái:</strong>
+                <%= khoaHoc.trangThai %>
+            </p>
+        </div>
+    </div>
+
+    <h4 class="mb-3">Danh sách buổi học</h4>
+    <% if (dsBuoiHoc.length> 0) { %>
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="table-primary">
+                <tr>
+                    <th>#</th>
+                    <th>Ngày học</th>
+                    <th>Giờ</th>
+                    <th>Bài học</th>
+                    <th>Phòng học</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% dsBuoiHoc.forEach((bh, idx)=> { %>
+                    <tr>
+                        <td>
+                            <%= idx + 1 %>
+                        </td>
+                        <td>
+                            <%= bh.ngayHoc ? bh.ngayHoc.toLocaleDateString("vi-VN") : "" %>
+                        </td>
+                        <td>
+                            <%= bh.gioBatDau %> - <%= bh.gioKetThuc %>
+                        </td>
+                        <td>
+                            <%= bh.lesson ? bh.lesson.tenBaiHoc : "N/A" %>
+                        </td>
+                        <td>
+                            <%= bh.phongHoc ? bh.phongHoc.tenPhong : "N/A" %>
+                        </td>
+                        <td>
+                            <span class="badge <%= bh.trangThai === " Bình thường" ? "bg-success"
+                                : "bg-warning text-dark" %>">
+                                <%= bh.trangThai %>
+                            </span>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+        <% } else { %>
+            <div class="alert alert-info text-center">Chưa có buổi học nào cho khóa học này.</div>
+            <% } %>
+</div>

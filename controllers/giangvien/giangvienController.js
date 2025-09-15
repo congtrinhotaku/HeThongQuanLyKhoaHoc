@@ -27,7 +27,7 @@ exports.getTrangchu = async (req, res) => {
         }).lean();
 
         res.render("giangvien/trangchu", {
-            layout: "layouts/main",
+            layout: "layouts/teacher_layout",
             title: "Trang chủ",
             user: req.user,
             gv,
