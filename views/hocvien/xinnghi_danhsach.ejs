@@ -1,0 +1,37 @@
+<h3>Danh sách đơn xin nghỉ phép</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Khóa học</th>
+      <th>Ngày học</th>
+      <th>Lý do</th>
+      <th>File minh chứng</th>
+      <th>Trạng thái</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% dsNghiPhep.forEach((don, i) => { %>
+      <tr>
+        <td><%= i+1 %></td>
+        <td><%= don.buoiHoc.khoaHoc.tenKhoaHoc %></td>
+        <td><%= new Date(don.buoiHoc.ngayHoc).toLocaleDateString() %></td>
+        <td><%= don.lyDo %></td>
+        <td>
+          <% if (don.fileMinhChung) { %>
+            <a href="<%= don.fileMinhChung %>" target="_blank">Xem file</a>
+          <% } %>
+        </td>
+        <td>
+          <% if (don.trangThai === "Chờ duyệt") { %>
+            <span class="badge bg-primary">Chờ duyệt</span>
+          <% } else if (don.trangThai === "Từ chối") { %>
+            <span class="badge bg-danger">Từ chối</span>
+          <% } else { %>
+            <span class="badge bg-success">Duyệt</span>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

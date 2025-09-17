@@ -1,0 +1,56 @@
+<h3 class="mb-4">Danh sách đơn xin nghỉ / học bù</h3>
+
+<table class="table table-bordered align-middle">
+  <thead>
+    <tr>
+      <th>Học viên</th>
+      <th>Khóa học</th>
+      <th>Ngày học</th>
+      <th>Lý do</th>
+      <th>File minh chứng</th>
+      <th>Trạng thái</th>
+      <th>Hành động</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (dsDon.length === 0) { %>
+      <tr><td colspan="7" class="text-center">Chưa có đơn nào</td></tr>
+    <% } %>
+    <% dsDon.forEach(don => { %>
+      <tr>
+        <td><%= don.hocVien?.hoTen %> (<%= don.hocVien?.email %>)</td>
+        <td><%= don.buoiHoc?.khoaHoc?.tenKhoaHoc %></td>
+        <td><%= don.buoiHoc?.ngayHoc?.toLocaleDateString("vi-VN") %></td>
+        <td><%= don.lyDo %></td>
+        <td>
+          <% if (don.fileMinhChung) { %>
+            <a href="<%= don.fileMinhChung %>" target="_blank">Xem</a>
+          <% } else { %>
+            Không có
+          <% } %>
+        </td>
+        <td>
+          <% if (don.trangThai === "Chờ duyệt") { %>
+            <span class="badge bg-warning">Chờ duyệt</span>
+          <% } else if (don.trangThai === "Duyệt") { %>
+            <span class="badge bg-success">Đã duyệt</span>
+          <% } else { %>
+            <span class="badge bg-danger">Từ chối</span>
+          <% } %>
+        </td>
+        <td>
+          <% if (don.trangThai === "Chờ duyệt") { %>
+            <form action="/admin/nghiphep/<%= don._id %>/duyet" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-sm btn-success">Duyệt</button>
+            </form>
+            <form action="/admin/nghiphep/<%= don._id %>/tuchoi" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-sm btn-danger">Từ chối</button>
+            </form>
+          <% } else { %>
+            <em>Không khả dụng</em>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

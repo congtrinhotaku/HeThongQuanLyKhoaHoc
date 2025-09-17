@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Xin nghỉ phép/Học bù</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNghiModal">
+      <i class="bi bi-plus-circle"></i> Xin nghỉ phép
+    </button>
+  </div>
+
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Khóa học</th>
+        <th>Ngày học</th>
+        <th>Lý do</th>
+        <th>Minh chứng</th>
+        <th>Trạng thái</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% dsNghiPhep.forEach((n, i) => { %>
+        <tr>
+          <td><%= i+1 %></td>
+          <td><%= n.buoiHoc?.khoaHoc?.tenKhoaHoc %></td>
+          <td><%= n.buoiHoc?.ngayHoc?.toLocaleDateString("vi-VN") %></td>
+          <td><%= n.lyDo %></td>
+          <td>
+            <% if(n.fileMinhChung) { %>
+              <a href="<%= n.fileMinhChung %>" target="_blank" class="btn btn-sm btn-info">Xem</a>
+            <% } else { %>
+              Không có
+            <% } %>
+          </td>
+          <td>
+            <% if(n.trangThai === "Chờ duyệt") { %>
+              <span class="badge bg-primary">Chờ duyệt</span>
+            <% } else if(n.trangThai === "Từ chối") { %>
+              <span class="badge bg-danger">Từ chối</span>
+            <% } else { %>
+              <span class="badge bg-success">Đã duyệt</span>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal Xin nghỉ -->
+<div class="modal fade" id="addNghiModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form action="/hocvien/xinnghi/add" method="POST" enctype="multipart/form-data" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xin nghỉ phép</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label>Chọn buổi học</label>
+          <input type="date" name="buoiHoc" class="form-control" required>
+          <!-- Hoặc có thể render select buổi học -->
+        </div>
+        <div class="mb-3">
+          <label>Lý do</label>
+          <textarea name="lyDo" class="form-control" required></textarea>
+        </div>
+        <div class="mb-3">
+          <label>File minh chứng</label>
+          <input type="file" name="fileMinhChung" class="form-control" accept="image/*,.pdf">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Gửi</button>
+      </div>
+    </form>
+  </div>
+</div>

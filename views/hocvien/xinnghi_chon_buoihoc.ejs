@@ -1,0 +1,23 @@
+<h3>Chọn buổi học để xin nghỉ</h3>
+<form action="/hocvien/xinnghi" method="POST" enctype="multipart/form-data">
+  <input type="hidden" name="khoaHoc" value="<%= khoaHocId %>">
+  <div class="mb-3">
+    <label>Buổi học</label>
+    <select name="buoiHoc" class="form-select">
+      <% dsBuoiHoc.forEach(bh => { %>
+        <option value="<%= bh._id %>">
+          <%= bh.ngayHoc.toLocaleDateString() %> - <%= bh.gioBatDau %> đến <%= bh.gioKetThuc %>
+        </option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label>Lý do</label>
+    <textarea name="lyDo" class="form-control" required></textarea>
+  </div>
+  <div class="mb-3">
+    <label>File minh chứng</label>
+    <input type="file" name="fileMinhChung" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-success">Gửi đơn</button>
+</form>

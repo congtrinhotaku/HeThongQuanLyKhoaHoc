@@ -1,0 +1,52 @@
+<h3>Chọn khóa học để xin nghỉ</h3>
+<ul class="list-group mb-4">
+  <% dsKhoaHoc.forEach(dk => { %>
+    <li class="list-group-item d-flex justify-content-between">
+      <span><%= dk.khoaHoc.tenKhoaHoc %></span>
+      <a href="/hocvien/xinnghi/khoa/<%= dk.khoaHoc._id %>" class="btn btn-sm btn-primary">Chọn</a>
+    </li>
+  <% }) %>
+</ul>
+
+<h3>Lịch sử xin nghỉ</h3>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Khóa học</th>
+      <th>Buổi học</th>
+      <th>Lý do</th>
+      <th>File minh chứng</th>
+      <th>Trạng thái</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (dsNghiPhep.length === 0) { %>
+      <tr>
+        <td colspan="5" class="text-center">Chưa có đơn xin nghỉ nào</td>
+      </tr>
+    <% } %>
+    <% dsNghiPhep.forEach(don => { %>
+      <tr>
+        <td><%= don.buoiHoc?.khoaHoc?.tenKhoaHoc %></td>
+        <td><%= don.buoiHoc?.ngayHoc?.toLocaleDateString("vi-VN") %></td>
+        <td><%= don.lyDo %></td>
+        <td>
+          <% if (don.fileMinhChung) { %>
+            <a href="<%= don.fileMinhChung %>" target="_blank">Xem</a>
+          <% } else { %>
+            Không có
+          <% } %>
+        </td>
+        <td>
+          <% if (don.trangThai === "Chờ duyệt") { %>
+            <span class="badge bg-warning">Chờ duyệt</span>
+          <% } else if (don.trangThai === "Duyệt") { %>
+            <span class="badge bg-success">Đã duyệt</span>
+          <% } else { %>
+            <span class="badge bg-danger">Từ chối</span>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
