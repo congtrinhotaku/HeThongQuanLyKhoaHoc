@@ -1,52 +1,36 @@
-<div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary border-end shadow"
-    style="width: 80px; min-height: 100vh; position: fixed; top: 0; left: 0;">
+<div class="bg-dark text-white d-flex flex-column p-3" style="width: 250px; min-height: 100vh;">
+    <h4 class="text-center mb-4">Học viên</h4>
 
-    <!-- Logo -->
-    <a href="/tasks"
-        class="d-flex align-items-center mb-4 link-body-emphasis text-decoration-none justify-content-center">
-        <i class="bi bi-kanban fs-3 text-primary"></i>
-    </a>
-
-    <!-- Menu chính -->
-    <ul class="nav nav-pills flex-column mb-auto text-center">
-
-        <!-- cơ sở & phòng học -->
-        <li class="nav-item mb-3">
-            <a href="/admin/coso" class="nav-link py-2 rounded-3" title="cơ sở & phòng học" data-bs-toggle="tooltip"
-                data-bs-placement="right">
-                <i class="bi bi-geo-alt-fill fs-4"></i>
-            </a>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="/hocvien/profile" class="nav-link text-white">Thông tin cá nhân</a>
+        </li>
+        <li>
+            <a href="/hocvien/lichhoc" class="nav-link text-white">Lịch học</a>
+        </li>
+        <li>
+            <a href="/hocvien/khoahoc" class="nav-link text-white">Khóa học đã đăng ký</a>
+        </li>
+        <li>
+            <a href="/hocvien/baitap" class="nav-link text-white">Bài tập</a>
+        </li>
+        <li>
+            <a href="/hocvien/xinnghi" class="nav-link text-white">Xin nghỉ phép/Học bù</a>
         </li>
     </ul>
 
     <hr>
-    
-    
-    
-    <!-- Nút đổi theme ở dưới cùng -->
-    <div class="mt-auto text-center">
-        <button id="toggleTheme" class="btn btn-sm btn-outline-secondary rounded-circle shadow"
-            style="width: 42px; height: 42px;" title="Chuyển đổi giao diện">
-            <i id="themeIcon" class="bi bi-moon fs-5"></i>
-        </button>
-    </div>
-    
-    <div class="dropdown text-center mt-3 ms-2">
-        <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" id="userMenu"
+    <div class="dropdown">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser"
             data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-person-circle fs-3"></i>
+            <img src="<%= user.anhDaiDien || '/images/default-avatar.png' %>" alt="" width="32" height="32"
+                class="rounded-circle me-2">
+            <strong>
+                <%= user.username %>
+            </strong>
         </a>
-        <ul class="dropdown-menu text-small shadow" aria-labelledby="userMenu">
-            <li>
-                <span class="dropdown-item-text fw-bold">
-                    <%= user.username %>
-                </span>
-            </li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
+            <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
         </ul>
     </div>
-    
 </div>

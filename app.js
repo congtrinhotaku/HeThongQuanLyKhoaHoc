@@ -40,6 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(methodOverride("_method"));
 app.use(expressLayouts);
 app.set("layout", "layouts/main"); 
@@ -67,7 +68,11 @@ const UserRoutes = require("./routes/admin/userRoutes");
 const GiangVienRoutes = require("./routes/admin/giangvienRoutes");
 const HocVienRoutes = require("./routes/admin/hocvienRoutes");
 const kioskRoutes = require("./routes/admin/kioskRoutes");
-
+//giang vien
+const BaiTapRoutes = require("./routes/giangvien/baitapRoutes");
+const indexgiangvien = require("./routes/giangvien/indexRoutes");
+//hoc vien
+const hocvien_profile = require("./routes/hocvien/hocvien_profile");
 
 
 
@@ -80,9 +85,11 @@ app.use("/admin/user", isAdmin, UserRoutes);
 app.use("/admin/giangvien", isAdmin, GiangVienRoutes);
 app.use("/admin/hocvien", isAdmin, HocVienRoutes); 
 app.use("/kiosk", kioskRoutes);
-
-
-
+//giang vien
+app.use("/giangvien", indexgiangvien);
+app.use("/giangvien/baitap", BaiTapRoutes);
+//hoc vien
+app.use("/hocvien", hocvien_profile);
 
 // 404 handler
 app.use((req, res) => {

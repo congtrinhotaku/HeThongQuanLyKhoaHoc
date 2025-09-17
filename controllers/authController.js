@@ -63,8 +63,10 @@ exports.postLogin = async (req, res) => {
     req.session.userId = user._id;
     req.session.user = user;
 
-    if(user.role = "admin")  return res.redirect("/admin");
-    
+    if(user.role === "admin")  return res.redirect("/admin");
+    if (user.role === "teacher") return res.redirect("/giangvien");
+    if (user.role === "student") return res.redirect("/hocvien");
+   
   } catch (err) {
     res.render("auth/dangnhap", {
       error: "❌ Lỗi đăng nhập: " + err.message,layout: false  
