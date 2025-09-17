@@ -71,14 +71,10 @@ const kioskRoutes = require("./routes/admin/kioskRoutes");
 //giang vien
 const BaiTapRoutes = require("./routes/giangvien/baitapRoutes");
 const indexgiangvien = require("./routes/giangvien/indexRoutes");
-<<<<<<< HEAD
+
 //hoc vien
 const hocvien_profile = require("./routes/hocvien/hocvien_profile");
-=======
 const khoahocRoutes = require("./routes/giangvien/khoahocRoutes");
-
->>>>>>> 17907e94a734136ff0b0f301fb1c1f2ad51f7d85
-
 
 
 app.use("/", authRoutes);
@@ -93,13 +89,10 @@ app.use("/kiosk", kioskRoutes);
 //giang vien
 app.use("/giangvien", indexgiangvien);
 app.use("/giangvien/baitap", BaiTapRoutes);
-<<<<<<< HEAD
+
 //hoc vien
 app.use("/hocvien", hocvien_profile);
-=======
 app.use("/giangvien/khoahoc", khoahocRoutes);
-
->>>>>>> 17907e94a734136ff0b0f301fb1c1f2ad51f7d85
 
 // 404 handler
 app.use((req, res) => {

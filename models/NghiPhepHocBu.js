@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const NghiPhepHocBuSchema = new Schema({
-  hocVien: { type: Schema.Types.ObjectId, ref: "NguoiDung" },
+  hocVien: { type: Schema.Types.ObjectId, ref: "HocVien" },
   buoiHoc: { type: Schema.Types.ObjectId, ref: "BuoiHoc" },
   lyDo: { type: String },
   fileMinhChung: { type: String },
