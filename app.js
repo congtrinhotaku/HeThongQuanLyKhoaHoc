@@ -72,6 +72,7 @@ const kioskRoutes = require("./routes/admin/kioskRoutes");
 const BaiTapRoutes = require("./routes/giangvien/baitapRoutes");
 const indexgiangvien = require("./routes/giangvien/indexRoutes");
 
+const profile = require("./routes/giangvien/giangvienprofileRoutes");
 //hoc vien
 const hocvien_profile = require("./routes/hocvien/hocvien_profile");
 const khoahocRoutes = require("./routes/giangvien/khoahocRoutes");
@@ -89,10 +90,12 @@ app.use("/kiosk", kioskRoutes);
 //giang vien
 app.use("/giangvien", indexgiangvien);
 app.use("/giangvien/baitap", BaiTapRoutes);
+app.use("/giangvien", profile);
+app.use("/giangvien/khoahoc", khoahocRoutes);
 
 //hoc vien
 app.use("/hocvien", hocvien_profile);
-app.use("/giangvien/khoahoc", khoahocRoutes);
+
 
 // 404 handler
 app.use((req, res) => {

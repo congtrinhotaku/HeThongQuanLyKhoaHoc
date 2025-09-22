@@ -1,0 +1,105 @@
+<div class="container mt-5">
+    <h2 class="mb-4 text-center fw-bold">Thông tin cá nhân</h2>
+
+    <% if (message) { %>
+        <div id="alertMessage"
+            style="background: #4caf50; color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+            <%= message %>
+        </div>
+        <% } %>
+
+            <div class="row">
+                <!-- Form bên trái -->
+                <div class="col-md-8">
+                    <form action="/giangvien/profile" method="POST" class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Họ tên</label>
+                            <input type="text" name="hoTen" class="form-control" value="<%= gv.hoTen %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Ngày sinh</label>
+                            <input type="date" name="ngaySinh" class="form-control"
+                                value="<%= gv.ngaySinh ? gv.ngaySinh.toISOString().split('T')[0] : '' %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Giới tính</label>
+                            <select name="gioiTinh" class="form-select">
+                                <option value="Nam" <%=gv.gioiTinh==="Nam" ? "selected" : "" %>>Nam</option>
+                                <option value="Nữ" <%=gv.gioiTinh==="Nữ" ? "selected" : "" %>>Nữ</option>
+                                <option value="Khác" <%=gv.gioiTinh==="Khác" ? "selected" : "" %>>Khác</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" name="email" class="form-control" value="<%= gv.email %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Số điện thoại</label>
+                            <input type="text" name="soDienThoai" class="form-control" value="<%= gv.soDienThoai %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Zalo</label>
+                            <input type="text" name="soZalo" class="form-control" value="<%= gv.soZalo %>">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Địa chỉ</label>
+                            <input type="text" name="diaChi" class="form-control" value="<%= gv.diaChi %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Trình độ</label>
+                            <input type="text" name="trinhDo" class="form-control" value="<%= gv.trinhDo %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Bằng cấp</label>
+                            <input type="text" name="bangCap" class="form-control" value="<%= gv.bangCap %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Số năm kinh nghiệm</label>
+                            <input type="number" name="soNamKinhNghiem" class="form-control"
+                                value="<%= gv.soNamKinhNghiem %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nơi từng dạy</label>
+                            <input type="text" name="noiTungDay" class="form-control" value="<%= gv.noiTungDay %>">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Mô tả</label>
+                            <textarea name="moTa" class="form-control" rows="3"><%= gv.moTa %></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Điểm IELTS</label>
+                            <input type="number" step="0.5" name="diemIELTS" class="form-control"
+                                value="<%= gv.diemIELTS %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Điểm TOEIC</label>
+                            <input type="number" step="5" name="diemTOEIC" class="form-control"
+                                value="<%= gv.diemTOEIC %>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Trạng thái</label>
+                            <select name="trangThai" class="form-select">
+                                <option value="Đang dạy" <%=gv.trangThai==="Đang dạy" ? "selected" : "" %>>Đang dạy
+                                </option>
+                                <option value="Tạm nghỉ" <%=gv.trangThai==="Tạm nghỉ" ? "selected" : "" %>>Tạm nghỉ
+                                </option>
+                                <option value="Đã nghỉ" <%=gv.trangThai==="Đã nghỉ" ? "selected" : "" %>>Đã nghỉ
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-success px-5">Cập nhật</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Ảnh đại diện bên phải -->
+                <div class="col-md-4 d-flex justify-content-end align-items-start">
+                    <div class="position-relative">
+                        <img src="<%= gv.anhDaiDien ? gv.anhDaiDien : '/images/default-avatar.png'%>"
+                            alt="Ảnh đại diện" class="img-fluid rounded-circle shadow-lg avatar-hover"
+                            style="width: 250px; height: 250px; object-fit: cover; border: 3px solid">
+                    </div>
+                </div>
+            </div>
