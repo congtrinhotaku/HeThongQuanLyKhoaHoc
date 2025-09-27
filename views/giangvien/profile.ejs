@@ -103,3 +103,16 @@
                     </div>
                 </div>
             </div>
+<script>
+    // Kiểm tra xem có alertMessage không
+    const alertMessage = document.getElementById('alertMessage');
+    if (alertMessage) {
+        setTimeout(() => {
+            // Ẩn dần
+            alertMessage.style.transition = "opacity 0.5s";
+            alertMessage.style.opacity = "0";
+            // Sau khi ẩn, remove khỏi DOM
+            setTimeout(() => alertMessage.remove(), 500);
+        }, 2000); 
+    }
+</script>

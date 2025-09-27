@@ -1,6 +1,12 @@
 const GiangVien = require("../../models/GiangVien");
 const KhoaHoc = require("../../models/KhoaHoc");
 
+const LoaiKhoaHoc = require("../../models/LoaiKhoaHoc");
+const PhongHoc = require("../../models/PhongHoc");
+const Lesson = require("../../models/Lesson");
+const BuoiHoc = require("../../models/BuoiHoc");
+const DangKyKhoaHoc = require("../../models/DangKyKhoaHoc");
+
 exports.getTrangchu = async (req, res) => {
     try {
         const gv = await GiangVien.findOne({ MaTaiKhoan: req.user._id }).lean();
@@ -24,7 +30,18 @@ exports.getTrangchu = async (req, res) => {
         const dskh = await KhoaHoc.find({
             giangVien: gv._id,
             thoiGianBatDau: { $gte: startDate, $lte: endDate },
-        }).lean();
+        }).populate({
+            path: "loaiKhoaHoc",
+            select: "tenLoai -_id" // lấy tenLoai và loại bỏ _id
+        })
+            .populate({
+                path: "phongHoc",
+                populate: {
+                    path: "coSo",
+                    model: "CoSo"
+                }
+            })
+   
 
         res.render("giangvien/trangchu", {
             layout: "layouts/teacher_layout",
@@ -34,6 +51,7 @@ exports.getTrangchu = async (req, res) => {
             dskh,
             nam,
             thang,
+            
         });
     } catch (err) {
         console.error(err);
