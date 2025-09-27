@@ -1,0 +1,49 @@
+<h3>Danh sách đơn xin nghỉ</h3>
+
+<div class="list-group">
+    <% if (dsDonNghi.length> 0) { %>
+        <% dsDonNghi.forEach(don=> { %>
+            <div class="list-group-item">
+                <h5>
+                    <%= don.hocVien?.hoTen %> (<%= don.hocVien?.email %>)
+                </h5>
+                <p>
+                    Buổi:
+                    <%= don.buoiHoc?.ngayHoc.toLocaleDateString("vi-VN") %>
+                        (<%= don.buoiHoc?.gioBatDau %> - <%= don.buoiHoc?.gioKetThuc %>)
+                </p>
+                <p><strong>Lý do:</strong>
+                    <%= don.lyDo %>
+                </p>
+
+                <% if (don.fileMinhChung) { %>
+                    <p>
+                        <a href="/uploads/<%= don.fileMinhChung %>" target="_blank" class="btn btn-sm btn-outline-info">
+                            Xem minh chứng
+                        </a>
+                    </p>
+                    <% } %>
+
+                        <% if (don.trangThai==="Chờ duyệt" ) { %>
+                            <form action="/giangvien/xinnghi/duyet/<%= don._id %>" method="POST"
+                                style="display:inline;">
+                                <input type="hidden" name="khoaHocId" value="<%= don.buoiHoc?.khoaHoc %>">
+                                <button type="submit" class="btn btn-success btn-sm">Phê duyệt</button>
+                            </form>
+
+                            <form action="/giangvien/xinnghi/tuchoi/<%= don._id %>" method="POST"
+                                style="display:inline;">
+                                <input type="hidden" name="khoaHocId" value="<%= don.buoiHoc?.khoaHoc %>">
+                                <button type="submit" class="btn btn-danger btn-sm">Từ chối</button>
+                            </form>
+                            <% } else if (don.trangThai==="Duyệt" ) { %>
+                                <span class="badge bg-success">Đã duyệt</span>
+                                <% } else if (don.trangThai==="Từ chối" ) { %>
+                                    <span class="badge bg-danger">Đã từ chối</span>
+                                    <% } %>
+            </div>
+            <% }) %>
+                <% } else { %>
+                    <div class="alert alert-info">Chưa có đơn xin nghỉ nào cho khóa học này.</div>
+                    <% } %>
+</div>
