@@ -24,7 +24,6 @@ router.post(
 
 
 
-
 // Xóa giảng viên
 router.post("/delete/:id", giangvienController.postDeleteGiangVien);
 

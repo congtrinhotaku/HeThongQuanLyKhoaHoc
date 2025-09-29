@@ -1,0 +1,12 @@
+<!-- views/giangvien/baitap_chon_khoahoc.ejs -->
+<h3>Chọn khóa học để quản lý bài tập</h3>
+<ul class="list-group mb-4">
+    <% dsKhoaHoc.forEach(kh=> { %>
+        <li class="list-group-item d-flex justify-content-between">
+            <span>
+                <%= kh.tenKhoaHoc %>
+            </span>
+        <a href="/giangvien/baitap/khoa/<%= kh._id %>"class="btn btn-sm btn-primary">Chọn</a>
+        </li>
+        <% }) %>
+</ul>

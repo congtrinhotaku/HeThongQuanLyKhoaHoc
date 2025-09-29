@@ -14,12 +14,13 @@ const storage = multer.diskStorage({
 
 // Bộ lọc chỉ cho phép ảnh
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png/;
+  const allowedTypes = [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"];
   const ext = path.extname(file.originalname).toLowerCase();
-  if (allowedTypes.test(ext)) {
+
+  if (allowedTypes.includes(ext)) {
     cb(null, true);
   } else {
-    cb(new Error("Chỉ chấp nhận file ảnh (jpg, jpeg, png)"), false);
+    cb(new Error("Chỉ chấp nhận file: jpg, jpeg, png, pdf, doc, docx, xls, xlsx"), false);
   }
 };
 

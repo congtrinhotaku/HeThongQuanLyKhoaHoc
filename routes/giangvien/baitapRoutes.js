@@ -1,22 +1,27 @@
 const express = require("express");
 const router = express.Router();
-const baiTapController = require("../../controllers/giangvien/baitapController");
-const isAdmin = require("../../middlewares/isAdmin");
 const isTeacher = require("../../middlewares/isTeacher");
+const baiTapController = require("../../controllers/giangvien/baitapController");
+const upload = require("../../middlewares/multer");
+router.get("/", isTeacher, baiTapController.getKhoaHoc);
 
-// Danh sách bài tập
-router.get("/", isTeacher, baiTapController.getAllBaiTap);
 
-// Thêm bài tập
-router.post("/add", isTeacher, baiTapController.addBaiTap);
+// Danh sách bài tập của khóa học
+router.get("/khoa/:idKhoaHoc", isTeacher, baiTapController.listByCourse);
 
-// Trang chi tiết bài tập
-router.get("/:id", isTeacher, baiTapController.getDetailBaiTap);
+// Hiển thị form thêm bài tập
+router.get("/khoa/:idKhoaHoc/them", isTeacher, baiTapController.showAddForm);
 
-// Cập nhật bài tập
-router.post("/:id", isTeacher, baiTapController.updateBaiTap);
+// Xử lý thêm bài tập
+router.post(
+    "/khoa/:idKhoaHoc/them",
+    isTeacher,
+    upload.single("fileDinhKem"),
+    baiTapController.addBaiTap
+);
+// Hiển thị form sửa bài tập
+router.post("/khoa/:idKhoaHoc/sua/:idBaiTap", isTeacher, upload.single("fileDinhKem"), baiTapController.updateBaiTap);
 
 // Xóa bài tập
-router.post("/delete/:id", isTeacher, baiTapController.deleteBaiTap);
-
+router.post("/khoa/:idKhoaHoc/xoa/:idBaiTap", isTeacher, baiTapController.deleteBaiTap);
 module.exports = router;

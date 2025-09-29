@@ -1,0 +1,15 @@
+<h3>Chọn khóa học để xem học viên</h3>
+<ul class="list-group mb-4">
+    <% if (dsKhoaHoc.length> 0) { %>
+        <% dsKhoaHoc.forEach(kh=> { %>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>
+                    <%= kh.tenKhoaHoc %>
+                </span>
+                <a href="/giangvien/hocvien/khoa/<%= kh._id %>" class="btn btn-sm btn-primary">Chọn</a>
+            </li>
+            <% }) %>
+                <% } else { %>
+                    <div class="alert alert-info">Bạn chưa dạy khóa học nào.</div>
+                    <% } %>
+</ul>

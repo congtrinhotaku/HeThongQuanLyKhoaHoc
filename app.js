@@ -71,6 +71,7 @@ const kioskRoutes = require("./routes/admin/kioskRoutes");
 //giang vien
 const BaiTapRoutes = require("./routes/giangvien/baitapRoutes");
 const indexgiangvien = require("./routes/giangvien/indexRoutes");
+const dshvRoutes = require("./routes/giangvien/dshvRoutes");
 
 const profile = require("./routes/giangvien/giangvienprofileRoutes");
 //hoc vien
@@ -92,6 +93,7 @@ app.use("/giangvien", indexgiangvien);
 app.use("/giangvien/baitap", BaiTapRoutes);
 app.use("/giangvien", profile);
 app.use("/giangvien/khoahoc", khoahocRoutes);
+app.use("/giangvien", dshvRoutes);
 
 //hoc vien
 app.use("/hocvien", hocvien_profile);

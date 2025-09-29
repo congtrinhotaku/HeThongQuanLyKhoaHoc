@@ -20,7 +20,7 @@ exports.getAllGiangVien = async (req, res) => {
 // Thêm giảng viên + tự tạo tài khoản
 exports.postAddGiangVien = async (req, res) => {
   try {
-    const { hoTen, ngaySinh, gioiTinh, email, soDienThoai, soZalo, diaChi, diemToeic, diemIelts, } = req.body;
+    const { hoTen, ngaySinh, gioiTinh, email, soDienThoai, soZalo, diaChi, diemTOEIC, diemIELTS, } = req.body;
 
     // Sinh mật khẩu mặc định: chữ cuối họ tên không dấu + 4 số cuối SĐT
     let matKhauMacDinh = "123456";
@@ -48,8 +48,8 @@ exports.postAddGiangVien = async (req, res) => {
       soDienThoai,
       soZalo,
       diaChi,
-      diemToeic,
-      diemIelts,
+      diemIELTS,
+      diemTOEIC,
       anhDaiDien: req.file ? `/uploads/${req.file.filename}` : null,
 
     });
@@ -63,40 +63,6 @@ exports.postAddGiangVien = async (req, res) => {
 
 // Sửa giảng viên
 // Thêm giảng viên
-exports.postAddGiangVien = async (req, res) => {
-  try {
-    const {
-      hoTen,
-      ngaySinh,
-      gioiTinh,
-      email,
-      soDienThoai,
-      soZalo,
-      diaChi,
-      diemToeic,
-      diemIelts
-    } = req.body;
-
-    const giangvien = new GiangVien({
-      hoTen,
-      ngaySinh,
-      gioiTinh,
-      email,
-      soDienThoai,
-      soZalo,
-      diaChi,
-      diemToeic,
-      diemIelts,
-      ...(req.file && { anhDaiDien: `/uploads/${req.file.filename}` })
-    });
-
-    await giangvien.save();
-    res.redirect("/admin/giangvien");
-  } catch (err) {
-    console.error("❌ Lỗi postAddGiangVien:", err);
-    res.redirect("/admin/giangvien");
-  }
-};
 
 
 // Sửa giảng viên
@@ -111,8 +77,8 @@ exports.postEditGiangVien = async (req, res) => {
       soDienThoai,
       soZalo,
       diaChi,
-      diemToeic,
-      diemIelts
+      diemTOEIC,
+      diemIELTS
     } = req.body;
 
     await GiangVien.findByIdAndUpdate(id, {
@@ -123,8 +89,8 @@ exports.postEditGiangVien = async (req, res) => {
       soDienThoai,
       soZalo,
       diaChi,
-      diemToeic,
-      diemIelts,
+      diemTOEIC,
+      diemIELTS,
       ...(req.file && { anhDaiDien: `/uploads/${req.file.filename}` })
     });
 

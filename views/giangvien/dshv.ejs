@@ -1,0 +1,51 @@
+<h3>Danh sách học viên của khóa: <%= khoaHoc.tenKhoaHoc %>
+</h3>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>SĐT</th>
+            <th>Ngày sinh</th>
+            <th>Địa chỉ</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (dsHocVien.length> 0) { %>
+            <% dsHocVien.forEach((hv, index)=> { %>
+                <tr>
+                    <td>
+                        <%= index + 1 %>
+                    </td>
+                    <td>
+                        <%= hv.hoTen %>
+                    </td>
+                    <td>
+                        <%= hv.email %>
+                    </td>
+                    <td>
+                        <%= hv.soDienThoai %>
+                    </td>
+                    <td>
+                        <% if (hv.ngaySinh) { %>
+                            <%= new Date(hv.ngaySinh).toLocaleDateString("vi-VN") %>
+                                <% } else { %>
+                                    -
+                                    <% } %>
+                    </td>
+                    <td>
+                        <%= hv.diaChi || "-" %>
+                    </td>
+                </tr>
+                <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="6" class="text-center">Chưa có học viên nào đăng ký</td>
+                        </tr>
+                        <% } %>
+    </tbody>
+</table>
+
+<a href="/giangvien/hocvien" class="btn btn-success">← Quay lại</a>

@@ -1,0 +1,154 @@
+<div class="container mt-5">
+    <h2 class="mb-4 fw-bold">Danh sách bài tập - <%= khoaHoc.tenKhoaHoc %>
+    </h2>
+
+    <div class="mb-3 d-flex justify-content-between">
+        <a href="/giangvien/baitap" class="btn btn-primary">⬅ Quay lại</a>
+        <!-- Nút bật form -->
+        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#formThemBaiTap">
+            + Thêm bài tập
+        </button>
+    </div>
+
+    <!-- Form thêm bài tập (ẩn mặc định) -->
+    <div class="collapse" id="formThemBaiTap">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">+ Thêm bài tập</div>
+            <div class="card-body">
+                <form action="/giangvien/baitap/khoa/<%= khoaHoc._id %>/them" method="POST"
+                    enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Tiêu đề</label>
+                        <input type="text" name="tieuDe" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nội dung</label>
+                        <textarea name="noiDung" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hạn nộp</label>
+                        <input type="date" name="hanNop" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">File đính kèm</label>
+                        <input type="file" name="fileDinhKem" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-success">Thêm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng danh sách bài tập -->
+<!-- Bảng danh sách bài tập -->
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Tiêu đề</th>
+            <th>Nội dung</th>
+            <th>Hạn nộp</th>
+            <th>Ngày tạo</th>
+            <th>File đính kèm</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (dsBaiTap.length> 0) { %>
+            <% dsBaiTap.forEach(bt=> { %>
+                <tr>
+                    <td>
+                        <%= bt.tieuDe %>
+                    </td>
+                    <td>
+                        <% if (bt.noiDung && bt.noiDung.length> 50) { %>
+                            <%= bt.noiDung.substring(0, 50) %>...
+                                <button class="btn btn-link p-0" data-bs-toggle="modal"
+                                    data-bs-target="#modal_<%= bt._id %>">Xem</button>
+                                <% } else { %>
+                                    <%= bt.noiDung || "-" %>
+                                        <% } %>
+                    </td>
+                    <td>
+                        <%= bt.hanNop ? bt.hanNop.toLocaleDateString("vi-VN") : "Không có" %>
+                    </td>
+                    <td>
+                        <%= bt.ngayTao ? bt.ngayTao.toLocaleDateString("vi-VN") : "-" %>
+                    </td>
+                    <td>
+                        <% if (bt.fileDinhKem && typeof bt.fileDinhKem==="string" ) { const
+                            fileName=bt.fileDinhKem.split("/").pop(); const ext=fileName.split(".").pop().toLowerCase();
+                            let icon="fa-file" ; if (ext==="pdf" ) icon="fa-file-pdf text-danger" ; else if
+                            (["doc", "docx" ].includes(ext)) icon="fa-file-word text-primary" ; else if (["xls", "xlsx"
+                            ].includes(ext)) icon="fa-file-excel text-success" ; else if
+                            (["jpg","jpeg","png","gif"].includes(ext)) icon="fa-file-image text-warning" ; %>
+                            <a href="<%= bt.fileDinhKem %>" target="_blank">
+                                <i class="fa <%= icon %>"></i>
+                                <%= fileName %>
+                            </a>
+                            <% } else { %> - <% } %>
+                    </td>
+                    <td>
+                        <!-- Nút sửa: mở collapse form sửa ngay dưới dòng -->
+                        <button class="btn btn-warning btn-sm mb-1" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#formSua_<%= bt._id %>">Sửa</button>
+
+                        <!-- Form sửa bài tập (ẩn) -->
+                        <div class="collapse" id="formSua_<%= bt._id %>">
+                            <form action="/giangvien/baitap/khoa/<%= khoaHoc._id %>/sua/<%= bt._id %>" method="POST"
+                                enctype="multipart/form-data" class="mb-2">
+                                <div class="mb-1">
+                                    <input type="text" name="tieuDe" class="form-control form-control-sm"
+                                        value="<%= bt.tieuDe %>" required>
+                                </div>
+                                <div class="mb-1">
+                                    <textarea name="noiDung" class="form-control form-control-sm"
+                                        rows="2"><%= bt.noiDung %></textarea>
+                                </div>
+                                <div class="mb-1">
+                                    <input type="date" name="hanNop" class="form-control form-control-sm"
+                                        value="<%= bt.hanNop ? bt.hanNop.toISOString().split('T')[0] : '' %>">
+                                </div>
+                                <div class="mb-1">
+                                    <input type="file" name="fileDinhKem" class="form-control form-control-sm">
+                                </div>
+                                <button type="submit" class="btn btn-success btn-sm">Lưu</button>
+                            </form>
+                        </div>
+
+                        <!-- Nút xóa -->
+                        <form action="/giangvien/baitap/khoa/<%= khoaHoc._id %>/xoa/<%= bt._id %>" method="POST"
+                            class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Bạn có chắc muốn xóa bài tập này?')">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+
+                <!-- Modal xem chi tiết -->
+                <div class="modal fade" id="modal_<%= bt._id %>" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <%= bt.tieuDe %>
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    <%= bt.noiDung %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="6" class="text-center">Chưa có bài tập nào</td>
+                        </tr>
+                        <% } %>
+    </tbody>
+</table>
+
+</div>
