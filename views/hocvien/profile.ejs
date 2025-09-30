@@ -57,5 +57,65 @@
                 class="img-thumbnail mb-2" style="max-width: 200px;">
             <p class="fw-bold">Ảnh đại diện</p>
         </div>
+
+        <!-- Nút mở modal sửa -->
+        <div class="text-end mt-4">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editHocVien">
+                <i class="bi bi-pencil-square"></i> Thay đổi thông tin
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal sửa -->
+<div class="modal fade" id="editHocVien" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="/hocvien/profile/update/<%= hv._id %>" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chỉnh sửa thông tin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Họ tên</label>
+                        <input type="text" name="hoTen" class="form-control" value="<%= hv.hoTen %>" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="date" name="ngaySinh" class="form-control"
+                            value="<%= hv.ngaySinh ? hv.ngaySinh.toISOString().substring(0,10) : '' %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Giới tính</label>
+                        <select name="gioiTinh" class="form-select">
+                            <option value="Nam" <%=hv.gioiTinh==="Nam" ? "selected" :"" %>>Nam</option>
+                            <option value="Nữ" <%=hv.gioiTinh==="Nữ" ? "selected" :"" %>>Nữ</option>
+                            <option value="Khác" <%=hv.gioiTinh==="Khác" ? "selected" :"" %>>Khác</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" value="<%= hv.email %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="text" name="soDienThoai" class="form-control" value="<%= hv.soDienThoai %>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Số Zalo</label>
+                        <input type="text" name="soZalo" class="form-control" value="<%= hv.soZalo %>">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Địa chỉ</label>
+                        <input type="text" name="diaChi" class="form-control" value="<%= hv.diaChi %>">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

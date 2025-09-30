@@ -18,6 +18,28 @@ exports.getProfile = async (req, res) => {
         res.status(500).send("Lỗi server");
     }
 };
+exports.postUpdateHocVien = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { hoTen, ngaySinh, gioiTinh, email, soDienThoai, soZalo, diaChi } = req.body;
+
+    await HocVien.findByIdAndUpdate(id, {
+      hoTen,
+      ngaySinh,
+      gioiTinh,
+      email,
+      soDienThoai,
+      soZalo,
+      diaChi
+    });
+
+    res.redirect("/hocvien/profile"); // load lại
+  } catch (err) {
+    console.error("❌ Lỗi postUpdateHocVien:", err);
+    res.redirect("/hocvien/profile");
+  }
+};
+
 // Hiển thị form chọn khóa học
 exports.getNghiHoc = async (req, res) => {
   try {
