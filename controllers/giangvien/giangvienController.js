@@ -1,47 +1,34 @@
 const GiangVien = require("../../models/GiangVien");
 const KhoaHoc = require("../../models/KhoaHoc");
-
-const LoaiKhoaHoc = require("../../models/LoaiKhoaHoc");
-const PhongHoc = require("../../models/PhongHoc");
-const Lesson = require("../../models/Lesson");
 const BuoiHoc = require("../../models/BuoiHoc");
-const DangKyKhoaHoc = require("../../models/DangKyKhoaHoc");
 
 exports.getTrangchu = async (req, res) => {
     try {
         const gv = await GiangVien.findOne({ MaTaiKhoan: req.user._id }).lean();
-        if (!gv) {
-            return res.status(404).send("Không tìm thấy giảng viên");
-        }
+        if (!gv) return res.status(404).send("Không tìm thấy giảng viên");
 
-       
         let { nam, thang } = req.query;
-
-       
         const now = new Date();
         nam = nam ? parseInt(nam) : now.getFullYear();
         thang = thang ? parseInt(thang) : now.getMonth() + 1;
 
-        // Tính khoảng thời gian lọc
-        const startDate = new Date(nam, thang - 1, 1); // đầu tháng
-        const endDate = new Date(nam, thang, 0, 23, 59, 59); // cuối tháng
+        // Lấy tất cả khóa học của GV
+        const dskh = await KhoaHoc.find({ giangVien: gv._id })
+            .populate({ path: "loaiKhoaHoc", select: "tenLoai -_id" })
+            .populate({ path: "phongHoc", populate: { path: "coSo", model: "CoSo" } })
+            .lean();
 
-        // Lọc danh sách khóa học của GV theo tháng/năm
-        const dskh = await KhoaHoc.find({
-            giangVien: gv._id,
-            thoiGianBatDau: { $gte: startDate, $lte: endDate },
-        }).populate({
-            path: "loaiKhoaHoc",
-            select: "tenLoai -_id" // lấy tenLoai và loại bỏ _id
-        })
-            .populate({
-                path: "phongHoc",
-                populate: {
-                    path: "coSo",
-                    model: "CoSo"
-                }
-            })
-   
+        // Gán lichHoc cho từng khóa học, không giới hạn ngày
+        for (let kh of dskh) {
+            const lichHoc = await BuoiHoc.find({ khoaHoc: kh._id })
+                .sort({ ngayHoc: 1, gioBatDau: 1 })
+                .lean();
+
+            kh.lichHoc = lichHoc.map(lh => ({
+                ...lh,
+                ngayHoc: new Date(lh.ngayHoc)
+            }));
+        }
 
         res.render("giangvien/trangchu", {
             layout: "layouts/teacher_layout",
@@ -51,7 +38,7 @@ exports.getTrangchu = async (req, res) => {
             dskh,
             nam,
             thang,
-            
+            thuVN: ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"]
         });
     } catch (err) {
         console.error(err);

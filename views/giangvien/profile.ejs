@@ -11,19 +11,20 @@
             <div class="row">
                 <!-- Form bên trái -->
                 <div class="col-md-8">
-                    <form action="/giangvien/profile" method="POST" class="row g-3">
+                    <form action="/giangvien/profile" method="POST" class="row g-3" id="profileForm">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Họ tên</label>
-                            <input type="text" name="hoTen" class="form-control" value="<%= gv.hoTen %>">
+                            <input type="text" name="hoTen" class="form-control" value="<%= gv.hoTen %>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Ngày sinh</label>
                             <input type="date" name="ngaySinh" class="form-control"
-                                value="<%= gv.ngaySinh ? gv.ngaySinh.toISOString().split('T')[0] : '' %>">
+                                value="<%= gv.ngaySinh ? gv.ngaySinh.toISOString().split('T')[0] : '' %>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Giới tính</label>
-                            <select name="gioiTinh" class="form-select">
+                            <select name="gioiTinh" class="form-select" required>
+                                <option value="">--Chọn--</option>
                                 <option value="Nam" <%=gv.gioiTinh==="Nam" ? "selected" : "" %>>Nam</option>
                                 <option value="Nữ" <%=gv.gioiTinh==="Nữ" ? "selected" : "" %>>Nữ</option>
                                 <option value="Khác" <%=gv.gioiTinh==="Khác" ? "selected" : "" %>>Khác</option>
@@ -31,36 +32,38 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Email</label>
-                            <input type="email" name="email" class="form-control" value="<%= gv.email %>">
+                            <input type="email" name="email" class="form-control" value="<%= gv.email %>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Số điện thoại</label>
-                            <input type="text" name="soDienThoai" class="form-control" value="<%= gv.soDienThoai %>">
+                            <input type="text" name="soDienThoai" class="form-control" value="<%= gv.soDienThoai %>"
+                                required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Zalo</label>
-                            <input type="text" name="soZalo" class="form-control" value="<%= gv.soZalo %>">
+                            <input type="text" name="soZalo" class="form-control" value="<%= gv.soZalo %>" required>
                         </div>
                         <div class="col-md-12">
                             <label class="form-label fw-semibold">Địa chỉ</label>
-                            <input type="text" name="diaChi" class="form-control" value="<%= gv.diaChi %>">
+                            <input type="text" name="diaChi" class="form-control" value="<%= gv.diaChi %>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Trình độ</label>
-                            <input type="text" name="trinhDo" class="form-control" value="<%= gv.trinhDo %>">
+                            <input type="text" name="trinhDo" class="form-control" value="<%= gv.trinhDo %>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Bằng cấp</label>
-                            <input type="text" name="bangCap" class="form-control" value="<%= gv.bangCap %>">
+                            <input type="text" name="bangCap" class="form-control" value="<%= gv.bangCap %>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Số năm kinh nghiệm</label>
                             <input type="number" name="soNamKinhNghiem" class="form-control"
-                                value="<%= gv.soNamKinhNghiem %>">
+                                value="<%= gv.soNamKinhNghiem %>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Nơi từng dạy</label>
-                            <input type="text" name="noiTungDay" class="form-control" value="<%= gv.noiTungDay %>">
+                            <input type="text" name="noiTungDay" class="form-control" value="<%= gv.noiTungDay %>"
+                                required>
                         </div>
                         <div class="col-md-12">
                             <label class="form-label fw-semibold">Mô tả</label>
@@ -69,16 +72,17 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Điểm IELTS</label>
                             <input type="number" step="0.5" name="diemIELTS" class="form-control"
-                                value="<%= gv.diemIELTS %>">
+                                value="<%= gv.diemIELTS %>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Điểm TOEIC</label>
                             <input type="number" step="5" name="diemTOEIC" class="form-control"
-                                value="<%= gv.diemTOEIC %>">
+                                value="<%= gv.diemTOEIC %>" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Trạng thái</label>
-                            <select name="trangThai" class="form-select">
+                            <select name="trangThai" class="form-select" required>
+                                <option value="">--Chọn--</option>
                                 <option value="Đang dạy" <%=gv.trangThai==="Đang dạy" ? "selected" : "" %>>Đang dạy
                                 </option>
                                 <option value="Tạm nghỉ" <%=gv.trangThai==="Tạm nghỉ" ? "selected" : "" %>>Tạm nghỉ
@@ -97,22 +101,44 @@
                 <!-- Ảnh đại diện bên phải -->
                 <div class="col-md-4 d-flex justify-content-end align-items-start">
                     <div class="position-relative">
-                        <img src="<%= gv.anhDaiDien ? gv.anhDaiDien : '/images/default-avatar.png'%>"
+                        <img src="<%= gv.anhDaiDien ? gv.anhDaiDien : '/images/default-avatar.png' %>"
                             alt="Ảnh đại diện" class="img-fluid rounded-circle shadow-lg avatar-hover"
                             style="width: 250px; height: 250px; object-fit: cover; border: 3px solid">
                     </div>
                 </div>
             </div>
-<script>
-    // Kiểm tra xem có alertMessage không
-    const alertMessage = document.getElementById('alertMessage');
-    if (alertMessage) {
-        setTimeout(() => {
-            // Ẩn dần
-            alertMessage.style.transition = "opacity 0.5s";
-            alertMessage.style.opacity = "0";
-            // Sau khi ẩn, remove khỏi DOM
-            setTimeout(() => alertMessage.remove(), 500);
-        }, 2000); 
-    }
-</script>
+
+            <script>
+                const form = document.getElementById('profileForm');
+
+                form.addEventListener('submit', function (e) {
+                    let valid = true;
+                    const requiredFields = ['hoTen', 'ngaySinh', 'gioiTinh', 'email', 'soDienThoai', 'soZalo', 'diaChi',
+                        'trinhDo', 'bangCap', 'soNamKinhNghiem', 'noiTungDay', 'diemIELTS', 'diemTOEIC', 'trangThai'];
+
+                    requiredFields.forEach(name => {
+                        const field = form.querySelector(`[name="${name}"]`);
+                        if (!field.value.trim()) {
+                            valid = false;
+                            field.style.border = '2px solid red';
+                        } else {
+                            field.style.border = ''; // reset nếu hợp lệ
+                        }
+                    });
+
+                    if (!valid) {
+                        e.preventDefault();
+                        alert('Vui lòng điền đầy đủ các trường bắt buộc!');
+                    }
+                });
+
+                // Ẩn thông báo alertMessage sau 2s
+                const alertMessage = document.getElementById('alertMessage');
+                if (alertMessage) {
+                    setTimeout(() => {
+                        alertMessage.style.transition = "opacity 0.5s";
+                        alertMessage.style.opacity = "0";
+                        setTimeout(() => alertMessage.remove(), 500);
+                    }, 2000);
+                }
+            </script>
