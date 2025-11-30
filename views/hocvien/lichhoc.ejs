@@ -1,0 +1,37 @@
+ <h2 style="text-align:center;">Lịch học</h2>
+
+  <div id="calendar"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        slotMinTime: "07:00:00",
+        slotMaxTime: "22:00:00",
+        allDaySlot: false,
+        height: "auto",
+        locale: "vi",          // tiếng Việt
+        firstDay: 1,           // tuần bắt đầu từ Thứ 2
+
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+
+        events: <%- JSON.stringify(events) %>,
+
+        eventClick: function(info) {
+          alert(
+            "Môn: " + info.event.title +
+            "\nBắt đầu: " + info.event.start.toLocaleString() +
+            "\nKết thúc: " + info.event.end.toLocaleString()
+          );
+        }
+      });
+
+      calendar.render();
+    });
+  </script>

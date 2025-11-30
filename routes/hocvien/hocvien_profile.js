@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const profileController = require("../../controllers/hocvien/profile_controller");
+const calendarControler = require("../../controllers/hocvien/calendarControler");
 const isStudent = require("../../middlewares/isStudents");
 const upload = require("../../middlewares/multer");
 
@@ -14,5 +15,8 @@ router.get("/xinnghi/khoa/:khoaHocId",isStudent, profileController.getBuoiHocThe
 router.post("/xinnghi", upload.single("fileMinhChung"),isStudent, profileController.postXinNghi); // gửi đơn
 router.get("/xinnghi/danhsach", isStudent,profileController.getDanhSachXinNghi); // xem danh sách
 
+
+//Trang lịch học cá nhân
+router.get("/lichhoc", isStudent, calendarControler.getLichHocCaNhan);
 
 module.exports = router;

@@ -97,6 +97,7 @@ exports.postAddKhoaHoc = async (req, res) => {
     // lichHocJson (stringified JSON array: [{thu: 1, gioBatDau: "18:00", gioKetThuc: "20:00"}, ...])
     const { tenKhoaHoc, loaiKhoaHoc, coSo, giangVien, phongHoc, lichHocJson } = req.body;
 
+
     if (!tenKhoaHoc || !loaiKhoaHoc || !coSo || !phongHoc) {
       throw new Error("Thiếu trường bắt buộc");
     }
@@ -156,7 +157,7 @@ exports.postAddKhoaHoc = async (req, res) => {
         console.warn("lichHocJson parse failed:", e);
       }
     }
-
+    console.log("Lịch học đã parse:", lichHoc);
     // 7) Tạo BuoiHoc theo lichHoc đến khi đủ số bài học
     let buoiHocDaTao = 0;
     let firstBuoiDate = null;
