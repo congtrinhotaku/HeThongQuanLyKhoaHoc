@@ -1,36 +1,67 @@
-<div class="bg-dark text-white d-flex flex-column p-3" style="width: 250px; min-height: 100vh;">
-    <h4 class="text-center mb-4">Học viên</h4>
+<div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary border-end shadow"
+  style="width: 80px; min-height: 100vh; position: fixed; top: 0; left: 0;">
 
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="/hocvien" class="nav-link text-white">Thông tin cá nhân</a>
-        </li>
-        <li>
-            <a href="/hocvien/lichhoc" class="nav-link text-white">Lịch học</a>
-        </li>
-        <li>
-            <a href="/hocvien/khoahoc" class="nav-link text-white">Khóa học đã đăng ký</a>
-        </li>
-        <li>
-            <a href="/hocvien/baitap" class="nav-link text-white">Bài tập</a>
-        </li>
-        <li>
-            <a href="/hocvien/xinnghi" class="nav-link text-white">Xin nghỉ phép/Học bù</a>
-        </li>
-    </ul>
+  
+  <!-- Logo -->
+  <a href="/hocvien" class="d-flex align-items-center mb-4 link-body-emphasis text-decoration-none justify-content-center" title="Trang chủ học viên" data-bs-toggle="tooltip" data-bs-placement="right">
+    <i class="bi bi-mortarboard-fill fs-3 text-primary"></i>
+  </a>
 
+  <!-- Menu chính -->
+  <ul class="nav nav-pills flex-column mb-auto text-center">
+
+    <li class="nav-item mb-3">
+      <a href="/hocvien" class="nav-link py-2 rounded-3" title="Thông tin cá nhân" data-bs-toggle="tooltip" data-bs-placement="right">
+        <i class="bi bi-person-vcard-fill fs-4"></i>
+      </a>
+    </li>
+
+    <li class="nav-item mb-3">
+      <a href="/hocvien/lichhoc" class="nav-link py-2 rounded-3" title="Lịch học" data-bs-toggle="tooltip" data-bs-placement="right">
+        <i class="bi bi-calendar-week-fill fs-4"></i>
+      </a>
+    </li>
+
+    <li class="nav-item mb-3">
+      <a href="/hocvien/khoahoc" class="nav-link py-2 rounded-3" title="Khóa học đã đăng ký" data-bs-toggle="tooltip" data-bs-placement="right">
+        <i class="bi bi-journal-check fs-4"></i>
+      </a>
+    </li>
+
+    <li class="nav-item mb-3">
+      <a href="/hocvien/baitap" class="nav-link py-2 rounded-3" title="Bài tập" data-bs-toggle="tooltip" data-bs-placement="right">
+        <i class="bi bi-pencil-square fs-4"></i>
+      </a>
+    </li>
+
+    <li class="nav-item mb-3">
+      <a href="/hocvien/xinnghi" class="nav-link py-2 rounded-3" title="Xin nghỉ phép/Học bù" data-bs-toggle="tooltip" data-bs-placement="right">
+        <i class="bi bi-calendar2-plus-fill fs-4"></i>
+      </a>
+    </li>
+
+  </ul>
+
+  <!-- Nút đổi theme và User Menu -->
+  <div class="mt-auto">
     <hr>
-    <div class="dropdown">
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            <img src=" /images/default-avatar.png' " alt="" width="32" height="32"
-                class="rounded-circle me-2">
-            <strong>
-                <%= user.username %>
-            </strong>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
-            <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
-        </ul>
+    <div class="text-center mb-3">
+      <button id="toggleTheme" class="btn btn-sm btn-outline-secondary rounded-circle shadow" style="width: 42px; height: 42px;" title="Chuyển đổi giao diện" data-bs-toggle="tooltip" data-bs-placement="right">
+        <i id="themeIcon" class="bi bi-moon-stars-fill fs-5"></i>
+      </button>
     </div>
+
+    <div class="dropdown text-center">
+      <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-person-circle fs-3"></i>
+      </a>
+      <ul class="dropdown-menu text-small shadow" aria-labelledby="userMenu">
+        <li><span class="dropdown-item-text fw-bold"><%= user.username %></span></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="/hocvien">Trang cá nhân</a></li>
+        <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+      </ul>
+    </div>
+  </div>
+
 </div>

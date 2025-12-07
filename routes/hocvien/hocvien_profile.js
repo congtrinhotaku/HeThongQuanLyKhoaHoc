@@ -6,6 +6,9 @@ const isStudent = require("../../middlewares/isStudents");
 const upload = require("../../middlewares/multer");
 
 
+
+
+
 // GET trang thông tin cá nhân
 router.get("/", isStudent, profileController.getProfile);
 router.post("/update/:id", isStudent, profileController.postUpdateHocVien);

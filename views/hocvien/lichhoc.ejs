@@ -1,37 +1,115 @@
- <h2 style="text-align:center;">Lịch học</h2>
+<div class="container-fluid">
+  <div class="card shadow-sm">
+    <style>
+      /* Custom FullCalendar Styles to match Bootstrap Theme */
+      :root {
+        --fc-border-color: var(--bs-border-color);
+        --fc-today-bg-color: rgba(var(--bs-primary-rgb), 0.1);
+        --fc-event-bg-color: var(--bs-primary);
+        --fc-event-border-color: var(--bs-primary-dark);
+        --fc-event-text-color: var(--bs-light);
+        --fc-button-bg-color: var(--bs-body-secondary);
+        --fc-button-text-color: var(--bs-body-color);
+        --fc-button-border-color: var(--bs-border-color);
+        --fc-button-hover-bg-color: var(--bs-secondary-bg-subtle);
+        --fc-button-active-bg-color: var(--bs-primary);
+        --fc-button-active-text-color: var(--bs-light);
+        --fc-button-active-border-color: var(--bs-primary);
+      }
 
-  <div id="calendar"></div>
+      .fc .fc-col-header-cell-cushion { /* Header text (Mon, Tue, etc.) */
+        color: var(--bs-secondary-color);
+        text-decoration: none;
+        font-weight: 500;
+      }
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var calendarEl = document.getElementById('calendar');
+      .fc .fc-daygrid-day-number { /* Day numbers */
+        color: var(--bs-body-color);
+        text-decoration: none;
+      }
 
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek',
-        slotMinTime: "07:00:00",
-        slotMaxTime: "22:00:00",
-        allDaySlot: false,
-        height: "auto",
-        locale: "vi",          // tiếng Việt
-        firstDay: 1,           // tuần bắt đầu từ Thứ 2
+      .fc-event {
+        border-radius: 4px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        padding: 2px 4px;
+        font-weight: 500;
+        border: 1px solid var(--fc-event-border-color) !important;
+      }
+    </style>
+    <div class="card-header">
+      <h4 class="mb-0"><i class="bi bi-calendar-week-fill me-2"></i>Lịch học của bạn</h4>
+    </div>
+    <div class="card-body">
+      <div id="calendar"></div>
+    </div>
+  </div>
+</div>
 
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
+<!-- Modal chi tiết sự kiện -->
+<div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eventDetailModalLabel">Chi tiết Buổi học</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h6 id="eventTitle" class="mb-3 fs-5"></h6>
+        <p><i class="bi bi-clock-fill me-2 text-primary"></i><strong>Bắt đầu:</strong> <span id="eventStart"></span></p>
+        <p><i class="bi bi-clock-history me-2 text-primary"></i><strong>Kết thúc:</strong> <span id="eventEnd"></span></p>
+        <p><i class="bi bi-journal-bookmark-fill me-2 text-primary"></i><strong>Khóa học:</strong> <span id="eventCourse"></span></p>
+        <p><i class="bi bi-geo-alt-fill me-2 text-primary"></i><strong>Phòng học:</strong> <span id="eventLocation"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-        events: <%- JSON.stringify(events) %>,
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    var eventDetailModal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
+    const events = <%- JSON.stringify(events) %>;
 
-        eventClick: function(info) {
-          alert(
-            "Môn: " + info.event.title +
-            "\nBắt đầu: " + info.event.start.toLocaleString() +
-            "\nKết thúc: " + info.event.end.toLocaleString()
-          );
-        }
-      });
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'timeGridWeek',
+      slotMinTime: "07:00:00",
+      slotMaxTime: "22:00:00",
+      allDaySlot: false,
+      height: "auto",
+      locale: "vi",
+      firstDay: 1,
 
-      calendar.render();
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+
+      events: events,
+
+      eventClick: function (info) {
+        // Lấy thông tin từ sự kiện
+        const title = info.event.title;
+        const start = info.event.start.toLocaleString('vi-VN', { dateStyle: 'full', timeStyle: 'short' });
+        const end = info.event.end.toLocaleString('vi-VN', { timeStyle: 'short' });
+        const course = info.event.extendedProps.khoaHoc || 'N/A';
+        const location = info.event.extendedProps.phongHoc || 'N/A';
+
+        // Điền thông tin vào Modal
+        document.getElementById('eventTitle').textContent = title;
+        document.getElementById('eventStart').textContent = start;
+        document.getElementById('eventEnd').textContent = end;
+        document.getElementById('eventCourse').textContent = course;
+        document.getElementById('eventLocation').textContent = location;
+
+        // Hiển thị Modal
+        eventDetailModal.show();
+      }
     });
-  </script>
+
+    calendar.render();
+  });
+</script>

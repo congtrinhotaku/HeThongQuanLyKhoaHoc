@@ -25,30 +25,71 @@ function nextDateForWeekday(fromDate, targetWeekday) {
 
 exports.getAllKhoaHoc = async (req, res) => {
   try {
-    const DSKhoaHoc = await KhoaHoc.find()
+    const { search, status, type, sortBy } = req.query;
+
+    // --- 1. Lấy dữ liệu cho bộ lọc ---
+    const allTypes = await LoaiKhoaHoc.find().lean();
+
+    // --- 2. Xây dựng query để lọc và tìm kiếm ---
+    let filterQuery = {};
+    if (search) {
+      filterQuery.tenKhoaHoc = { $regex: search, $options: 'i' }; // Tìm kiếm không phân biệt hoa thường
+    }
+    if (type) {
+      filterQuery.loaiKhoaHoc = type; // Giả sử type là _id của LoaiKhoaHoc
+    }
+    // Lọc trạng thái sẽ được xử lý sau khi lấy dữ liệu
+
+    // --- 3. Xây dựng tùy chọn sắp xếp ---
+    let sortOptions = {};
+    switch (sortBy) {
+      case 'name_asc': sortOptions.tenKhoaHoc = 1; break;
+      case 'name_desc': sortOptions.tenKhoaHoc = -1; break;
+      case 'students_desc': sortOptions.soLuongDangKy = -1; break;
+      case 'students_asc': sortOptions.soLuongDangKy = 1; break;
+      default: sortOptions.createdAt = -1; // Mặc định sắp xếp theo ngày tạo mới nhất
+    }
+
+    // --- 4. Lấy danh sách khóa học và tính toán các trường động ---
+    let allCourses = await KhoaHoc.find(filterQuery)
       .populate("loaiKhoaHoc")
-      .populate("giangVien") // mảng GiangVien
+      .populate({ path: "giangVien", select: "hoTen" })
+      .sort(sortOptions)
       .lean();
 
-    for (let kh of DSKhoaHoc) {
-      const count = await DangKyKhoaHoc.countDocuments({ khoaHoc: kh._id });
-      kh.soLuongDangKy = count;
-
+    // Tính toán soLuongDangKy và trangThaiThucTe cho mỗi khóa học
+    for (let kh of allCourses) {
+      kh.soLuongDangKy = await DangKyKhoaHoc.countDocuments({ khoaHoc: kh._id });
       const now = new Date();
       if (kh.thoiGianBatDau && now < kh.thoiGianBatDau) {
         kh.trangThaiThucTe = "Chưa bắt đầu";
       } else if (kh.thoiGianKetThuc && now > kh.thoiGianKetThuc) {
         kh.trangThaiThucTe = "Đã kết thúc";
-      } else {
-        kh.trangThaiThucTe = "Đang diễn ra";
-      }
+      } else { kh.trangThaiThucTe = "Đang diễn ra"; }
     }
+
+    // Áp dụng bộ lọc trạng thái sau khi đã tính
+    const DSKhoaHoc = status ? allCourses.filter(kh => kh.trangThaiThucTe === status) : allCourses;
+
+    // --- 5. Tính toán các chỉ số thống kê (từ tất cả khóa học, không bị ảnh hưởng bởi bộ lọc) ---
+    const allCoursesForStats = await KhoaHoc.find().lean(); // Lấy lại toàn bộ để tính stats
+    const totalCourses = allCoursesForStats.length;
+    const ongoingCourses = allCourses.filter(c => c.trangThaiThucTe === "Đang diễn ra").length;
+    const upcomingCourses = allCourses.filter(c => c.trangThaiThucTe === "Chưa bắt đầu").length;
+    const totalRegistered = allCourses.reduce((sum, course) => sum + course.soLuongDangKy, 0);
+    const totalCapacity = allCourses.reduce((sum, course) => sum + (course.soLuongToiDa || 0), 0);
+    const averageFillRate = totalCapacity > 0 ? ((totalRegistered / totalCapacity) * 100).toFixed(1) : 0;
+
+    const stats = { totalCourses, ongoingCourses, upcomingCourses, averageFillRate };
 
     res.render("admin/khoahoc", {
       layout: "layouts/main",
       title: "Quản lý Khóa Học",
-      user: req.user,
-      DSKhoaHoc
+      user: req.session.user, // Lấy user từ session
+      DSKhoaHoc,
+      stats,
+      allTypes,
+      query: req.query, // Truyền lại query để giữ giá trị trên form
     });
   } catch (err) {
     console.error("Lỗi getAllKhoaHoc:", err);

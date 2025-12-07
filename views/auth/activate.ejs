@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kích hoạt tài khoản</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #333; }
+        p { color: #666; }
+        .form-group { margin-bottom: 20px; }
+        input[type="text"], input[type="email"] { width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background-color: #007bff; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        .error { color: red; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Kích hoạt tài khoản</h2>
+        <p>Một mã OTP đã được gửi đến email <strong><%= email %></strong>. Vui lòng kiểm tra và nhập mã vào ô bên dưới.</p>
+        
+        <% if (error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
+
+        <form action="/active" method="POST">
+            <input type="hidden" name="email" value="<%= email %>">
+            <div class="form-group">
+                <input type="text" name="otp" placeholder="Nhập mã OTP" required>
+            </div>
+            <button type="submit">Xác nhận</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,119 +1,141 @@
-<div class="container">
-    <h2 class="mb-4">Thông tin cá nhân</h2>
-    <div class="row">
-        <!-- Thông tin -->
-        <div class="col-md-8">
-            <table class="table table-borderless">
-                <tbody>
-                    <tr>
-                        <th scope="row">Tên:</th>
-                        <td>
-                            <%= hv?.hoTen || '' %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Ngày sinh:</th>
-                        <td>
-                            <%= hv?.ngaySinh ? new Date(hv.ngaySinh).toLocaleDateString('vi-VN') : '' %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Giới tính:</th>
-                        <td>
-                            <%= hv?.gioiTinh || '' %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Email:</th>
-                        <td>
-                            <%= hv?.email || '' %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Số điện thoại:</th>
-                        <td>
-                            <%= hv?.soDienThoai || '' %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Số Zalo:</th>
-                        <td>
-                            <%= hv?.soZalo || '' %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Địa chỉ:</th>
-                        <td>
-                            <%= hv?.diaChi || '' %>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- Cột bên trái: Ảnh đại diện và thông tin chính -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <img src="<%= hv?.anhDaiDien || '/images/default-avatar.png' %>" alt="Ảnh đại diện"
+                        class="rounded-circle img-fluid mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                    <h4 class="my-3"><%= hv?.hoTen || 'Chưa cập nhật' %></h4>
+                    <p class="text-muted mb-1"><i class="bi bi-envelope-fill me-2"></i><%= hv?.email || 'N/A' %></p>
+                    <p class="text-muted mb-4"><i class="bi bi-geo-alt-fill me-2"></i><%= hv?.diaChi || 'Chưa có địa chỉ' %></p>
+                </div>
+            </div>
         </div>
 
-        <!-- Ảnh đại diện -->
-        <div class="col-md-4 text-center">
-            <img src="<%= hv?.anhDaiDien || '/images/default-avatar.png' %>" alt="Ảnh đại diện"
-                class="img-thumbnail mb-2" style="max-width: 200px;">
-            <p class="fw-bold">Ảnh đại diện</p>
+        <!-- Cột bên phải: Thông tin chi tiết -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Thông tin chi tiết</h5>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editHocVien">
+                            <i class="bi bi-pencil-square me-1"></i> Chỉnh sửa
+                        </button>
+                    </div>
+                    <hr>
+                    <dl class="row">
+                        <dt class="col-sm-4"><i class="bi bi-person-badge me-2 text-primary"></i>Họ và tên</dt>
+                        <dd class="col-sm-8"><%= hv?.hoTen || 'Chưa cập nhật' %></dd>
+
+                        <dt class="col-sm-4"><i class="bi bi-calendar-event me-2 text-primary"></i>Ngày sinh</dt>
+                        <dd class="col-sm-8"><%= hv?.ngaySinh ? new Date(hv.ngaySinh).toLocaleDateString('vi-VN') : 'Chưa cập nhật' %></dd>
+
+                        <dt class="col-sm-4"><i class="bi bi-gender-ambiguous me-2 text-primary"></i>Giới tính</dt>
+                        <dd class="col-sm-8"><%= hv?.gioiTinh || 'Chưa cập nhật' %></dd>
+                    </dl>
+                    <hr>
+                    <h6 class="text-muted">Thông tin liên hệ</h6>
+                    <dl class="row mt-3">
+                        <dt class="col-sm-4"><i class="bi bi-telephone-fill me-2 text-primary"></i>Số điện thoại</dt>
+                        <dd class="col-sm-8"><%= hv?.soDienThoai || 'Chưa cập nhật' %></dd>
+
+                        <dt class="col-sm-4"><i class="bi bi-chat-dots-fill me-2 text-primary"></i>Số Zalo</dt>
+                        <dd class="col-sm-8"><%= hv?.soZalo || 'Chưa cập nhật' %></dd>
+
+                        <dt class="col-sm-4"><i class="bi bi-envelope-fill me-2 text-primary"></i>Email</dt>
+                        <dd class="col-sm-8"><%= hv?.email || 'Chưa cập nhật' %></dd>
+
+                        <dt class="col-sm-4"><i class="bi bi-geo-alt-fill me-2 text-primary"></i>Địa chỉ</dt>
+                        <dd class="col-sm-8"><%= hv?.diaChi || 'Chưa cập nhật' %></dd>
+                    </dl>
+                </div>
+            </div>
         </div>
 
-        <!-- Nút mở modal sửa -->
-        <div class="text-end mt-4">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editHocVien">
-                <i class="bi bi-pencil-square"></i> Thay đổi thông tin
-            </button>
+        <!-- Các khóa học đã đăng ký -->
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3"><i class="bi bi-journal-check me-2"></i>Các khóa học đã đăng ký</h5>
+                    <% if (dsDangKy && dsDangKy.length > 0) { %>
+                        <div class="list-group">
+                            <% dsDangKy.forEach(dk => { %>
+                                <% if (dk.khoaHoc) { %>
+                                    <a href="/hocvien/khoahoc/<%= dk.khoaHoc._id %>" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1"><%= dk.khoaHoc.tenKhoaHoc %></h6>
+                                            <% 
+                                                let badgeClass = 'bg-secondary';
+                                                if (dk.khoaHoc.trangThaiThucTe === 'Đang diễn ra') badgeClass = 'bg-success';
+                                                if (dk.khoaHoc.trangThaiThucTe === 'Đã kết thúc') badgeClass = 'bg-danger';
+                                            %>
+                                            <span class="badge <%= badgeClass %> rounded-pill"><%= dk.khoaHoc.trangThaiThucTe %></span>
+                                        </div>
+                                        <p class="mb-1 text-muted small">
+                                            <i class="bi bi-calendar-check me-1"></i>
+                                            Bắt đầu: <%= dk.khoaHoc.thoiGianBatDau ? new Date(dk.khoaHoc.thoiGianBatDau).toLocaleDateString('vi-VN') : 'Chưa xác định' %>
+                                        </p>
+                                    </a>
+                                <% } %>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p class="text-muted">Bạn chưa đăng ký khóa học nào.</p>
+                    <% } %>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Modal sửa -->
 <div class="modal fade" id="editHocVien" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <form action="/hocvien/profile/update/<%= hv._id %>" method="POST">
+            <form action="/hocvien/profile/update/<%= hv?._id %>" method="POST">
                 <div class="modal-header">
                     <h5 class="modal-title">Chỉnh sửa thông tin</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Họ tên</label>
-                        <input type="text" name="hoTen" class="form-control" value="<%= hv.hoTen %>" required>
+                        <label for="hoTen" class="form-label">Họ tên</label>
+                        <input type="text" name="hoTen" id="hoTen" class="form-control" value="<%= hv?.hoTen || '' %>" required>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Ngày sinh</label>
-                        <input type="date" name="ngaySinh" class="form-control"
-                            value="<%= hv.ngaySinh ? hv.ngaySinh.toISOString().substring(0,10) : '' %>">
+                        <label for="ngaySinh" class="form-label">Ngày sinh</label>
+                        <input type="date" name="ngaySinh" id="ngaySinh" class="form-control"
+                            value="<%= hv?.ngaySinh ? new Date(hv.ngaySinh).toISOString().substring(0,10) : '' %>">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Giới tính</label>
-                        <select name="gioiTinh" class="form-select">
-                            <option value="Nam" <%=hv.gioiTinh==="Nam" ? "selected" :"" %>>Nam</option>
-                            <option value="Nữ" <%=hv.gioiTinh==="Nữ" ? "selected" :"" %>>Nữ</option>
-                            <option value="Khác" <%=hv.gioiTinh==="Khác" ? "selected" :"" %>>Khác</option>
+                        <label for="gioiTinh" class="form-label">Giới tính</label>
+                        <select name="gioiTinh" id="gioiTinh" class="form-select">
+                            <option value="Nam" <%= hv?.gioiTinh === "Nam" ? "selected" : "" %>>Nam</option>
+                            <option value="Nữ" <%= hv?.gioiTinh === "Nữ" ? "selected" : "" %>>Nữ</option>
+                            <option value="Khác" <%= hv?.gioiTinh === "Khác" ? "selected" : "" %>>Khác</option>
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" value="<%= hv.email %>">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" id="email" class="form-control" value="<%= hv?.email || '' %>">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Số điện thoại</label>
-                        <input type="text" name="soDienThoai" class="form-control" value="<%= hv.soDienThoai %>">
+                        <label for="soDienThoai" class="form-label">Số điện thoại</label>
+                        <input type="text" name="soDienThoai" id="soDienThoai" class="form-control" value="<%= hv?.soDienThoai || '' %>">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Số Zalo</label>
-                        <input type="text" name="soZalo" class="form-control" value="<%= hv.soZalo %>">
+                        <label for="soZalo" class="form-label">Số Zalo</label>
+                        <input type="text" name="soZalo" id="soZalo" class="form-control" value="<%= hv?.soZalo || '' %>">
                     </div>
                     <div class="col-12">
-                        <label class="form-label">Địa chỉ</label>
-                        <input type="text" name="diaChi" class="form-control" value="<%= hv.diaChi %>">
+                        <label for="diaChi" class="form-label">Địa chỉ</label>
+                        <input type="text" name="diaChi" id="diaChi" class="form-control" value="<%= hv?.diaChi || '' %>">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Lưu</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-check-circle-fill me-1"></i> Lưu thay đổi</button>
                 </div>
             </form>
         </div>

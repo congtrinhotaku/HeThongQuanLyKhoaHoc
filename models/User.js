@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const { act } = require("react");
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, default: "student",  enum: ["student", "admin","teacher"]},
+  active: { type: Boolean, default: false },
+  OTP: { type: String },
+  OTPExpire: { type: Date },
 });
 
 // hash password trước khi lưu

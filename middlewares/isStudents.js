@@ -1,20 +1,19 @@
 const NguoiDung = require("../models/User");
 
 // ================== KIỂM TRA NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP ==================
-module.exports =  async function  (req, res, next) {
-  try{
-    if (req.session.userId && req.session.user) 
-    {
-     const user = await NguoiDung.findOne({ _id: req.session.userId});
-     if (!user) return res.redirect("/login");
-     if (user.role != "student") return res.redirect("/login");
-     req.user = user;
-     next();
-    }else 
-    {
-      return res.redirect("/login");
+module.exports = async function (req, res, next) {
+  try {
+
+    if (req.session.userId && req.session.user) {
+      const user = await NguoiDung.findOne({ _id: req.session.userId });
+      if (!user) return res.redirect("/login");
+      if (user.role !== "student") return res.redirect("/login");
+      req.user = user;
+      return next();
     }
-  }catch (err) {
+
+    return res.redirect("/login");
+  } catch (err) {
     console.error("authHocVien middleware error:", err);
     res.status(500).send("Lỗi máy chủ.");
   }

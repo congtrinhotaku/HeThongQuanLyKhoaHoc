@@ -5,19 +5,44 @@ const BuoiHoc = require("../../models/BuoiHoc");
 
 exports.getProfile = async (req, res) => {
     try {
-        const hv = await HocVien.findOne({ MaTaiKhoan: req.user._id }).lean();
+        // Sử dụng req.session.user để nhất quán với các controller khác
+        const hv = await HocVien.findOne({ MaTaiKhoan: req.session.user._id }).lean();
+
+        let dsDangKy = [];
+        // Chỉ tìm các khóa học đã đăng ký nếu thông tin học viên tồn tại
+        if (hv) {
+            dsDangKy = await DangKyKhoaHoc.find({ hocVien: hv._id })
+                .populate("khoaHoc") // Lấy toàn bộ thông tin khóa học
+                .lean();
+
+            // Tính toán trạng thái thực tế cho mỗi khóa học
+            const now = new Date();
+            for (const dk of dsDangKy) {
+                if (dk.khoaHoc) {
+                    if (dk.khoaHoc.thoiGianBatDau && now < dk.khoaHoc.thoiGianBatDau) {
+                        dk.khoaHoc.trangThaiThucTe = "Chưa bắt đầu";
+                    } else if (dk.khoaHoc.thoiGianKetThuc && now > dk.khoaHoc.thoiGianKetThuc) {
+                        dk.khoaHoc.trangThaiThucTe = "Đã kết thúc";
+                    } else {
+                        dk.khoaHoc.trangThaiThucTe = "Đang diễn ra";
+                    }
+                }
+            }
+        }
 
         res.render("hocvien/profile", {
             layout: "layouts/hocvien_main",
             title: "Thông tin cá nhân",
-            user: req.user,
+            dsDangKy: dsDangKy,
+            user: req.session.user, // Sử dụng req.session.user
             hv
         });
     } catch (err) {
-        console.error(err);
+        console.error("Lỗi khi lấy thông tin cá nhân:", err);
         res.status(500).send("Lỗi server");
     }
 };
+
 exports.postUpdateHocVien = async (req, res) => {
   try {
     const { id } = req.params;
