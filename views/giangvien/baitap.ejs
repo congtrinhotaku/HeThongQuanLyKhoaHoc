@@ -1,0 +1,114 @@
+<%- include('../partials/header') %>
+
+  <div class="d-flex">
+    <%- include('../partials/giangvien_sidebar') %> <%# Giả sử bạn có sidebar cho giảng viên %>
+
+      <main class="main-content p-4" style="margin-left: 80px; width: calc(100% - 80px);">
+        <div class="container-fluid">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+              <i class="bi bi-pencil-square me-2"></i>Quản lý bài tập
+            </h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAssignmentModal">
+              <i class="bi bi-plus-circle-fill me-2"></i>Tạo bài tập mới
+            </button>
+          </div>
+
+          <!-- Danh sách bài tập đã tạo -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Danh sách bài tập</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Khóa học</th>
+                      <th>Tên bài tập</th>
+                      <th>Hạn nộp</th>
+                      <th>Số bài đã nộp</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if (assignments && assignments.length > 0) { %>
+                      <% assignments.forEach(assignment => { %>
+                        <tr>
+                          <td><%= assignment.course.name %></td>
+                          <td><%= assignment.title %></td>
+                          <td><%= new Date(assignment.dueDate).toLocaleDateString('vi-VN') %></td>
+                          <td><%= assignment.submissions.filter(s => s.submittedAt).length %> / <%= assignment.submissions.length %></td> <%# Giả định tổng số học viên là số lượng submissions %>
+                          <td>
+                            <a href="/giangvien/baitap/<%= assignment._id %>/submissions" class="btn btn-success btn-sm" title="Xem các bài đã nộp"><i class="bi bi-folder-check"></i></a>
+                            <a href="/giangvien/baitap/<%= assignment._id %>/edit" class="btn btn-warning btn-sm" title="Chỉnh sửa"><i class="bi bi-pencil-fill"></i></a>
+                            <form action="/giangvien/baitap/<%= assignment._id %>?_method=DELETE" method="POST" class="d-inline">
+                              <button type="submit" class="btn btn-danger btn-sm" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa bài tập này không?');"><i class="bi bi-trash-fill"></i></button>
+                            </form>
+                          </td>
+                        </tr>
+                      <% }); %>
+                    <% } else { %>
+                      <tr>
+                        <td colspan="5" class="text-center">Chưa có bài tập nào được tạo.</td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+  </div>
+
+  <!-- Modal Tạo bài tập mới -->
+  <div class="modal fade" id="createAssignmentModal" tabindex="-1" aria-labelledby="createAssignmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createAssignmentModalLabel">Tạo bài tập mới</h5> 
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="assignmentCourse" class="form-label">Chọn khóa học</label>
+              <select class="form-select" id="assignmentCourse">
+                <option value="" selected disabled>-- Chọn khóa học --</option>
+                <% if (courses && courses.length > 0) { %>
+                  <% courses.forEach(course => { %>
+                    <option value="<%= course._id %>"><%= course.name %></option>
+                  <% }); %>
+                <% } else { %>
+                  <option value="" disabled>Không có khóa học nào</option>
+                <% } %>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="assignmentTitle" class="form-label">Tên bài tập</label>
+              <input type="text" class="form-control" id="assignmentTitle" placeholder="Ví dụ: Bài tập lớn cuối kỳ">
+            </div>
+            <div class="mb-3">
+              <label for="assignmentDescription" class="form-label">Nội dung/Yêu cầu</label>
+              <textarea class="form-control" id="assignmentDescription" rows="5"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="assignmentDueDate" class="form-label">Hạn nộp</label>
+              <input type="datetime-local" class="form-control" id="assignmentDueDate">
+            </div>
+             <div class="mb-3">
+              <label for="assignmentFile" class="form-label">Tệp đính kèm (nếu có)</label>
+              <input class="form-control" type="file" id="assignmentFile">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button> 
+          <button type="submit" form="createAssignmentForm" class="btn btn-primary">Lưu và Giao bài</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,66 @@
+<%- include('../partials/header') %>
+
+  <div class="d-flex">
+    <%- include('../partials/hocvien_sidebar') %>
+
+      <main class="main-content p-4" style="margin-left: 80px; width: calc(100% - 80px);">
+        <div class="container-fluid">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+              <i class="bi bi-pencil-square me-2"></i>Bài tập của bạn
+            </h1>
+          </div>
+
+          <!-- Danh sách bài tập -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Danh sách bài tập</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Khóa học</th>
+                      <th>Tên bài tập</th>
+                      <th>Hạn nộp</th>
+                      <th>Trạng thái</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if (assignments && assignments.length > 0) { %>
+                      <% assignments.forEach(assignment => { %>
+                        <tr>
+                          <td><%= assignment.course.name %></td>
+                          <td><%= assignment.title %></td>
+                          <td><%= new Date(assignment.dueDate).toLocaleDateString('vi-VN') %></td>
+                          <td>
+                            <% if (assignment.status === 'Đã nộp') { %>
+                              <span class="badge bg-success"><%= assignment.status %></span>
+                            <% } else { %>
+                              <span class="badge bg-warning text-dark"><%= assignment.status %></span>
+                            <% } %>
+                          </td>
+                          <td>
+                            <a href="/hocvien/baitap/<%= assignment._id %>/nopbai" class="btn btn-info btn-sm <%= assignment.status === 'Đã nộp' ? 'disabled' : '' %>" title="Xem chi tiết và nộp bài">
+                              <i class="bi bi-eye-fill"></i> <%= assignment.status === 'Đã nộp' ? 'Đã nộp' : 'Nộp bài' %>
+                            </a>
+                          </td>
+                        </tr>
+                      <% }); %>
+                    <% } else { %>
+                      <tr>
+                        <td colspan="5" class="text-center">Không có bài tập nào.</td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+  </div>
+
+<%- include('../partials/footer') %>
