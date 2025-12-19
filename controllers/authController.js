@@ -114,9 +114,26 @@ exports.getActivate = async (req, res) => {
       to: user.email,
       subject: "Mã OTP kích hoạt tài khoản",
       html: `
-        <p>Chào mừng bạn đến với hệ thống của chúng tôi.</p>
-        <p>Mã OTP của bạn là: <strong>${otp}</strong></p>
-        <p>Mã sẽ hết hạn sau 5 phút.</p>
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #007bff; color: white; padding: 20px; text-align: center;">
+          <img src="https://i.ibb.co/nqkqfsB9/unnamed-1-removebg-preview-1.png" alt="Logo" style="max-width: 120px; margin-bottom: 10px;">
+          <h1>Xác thực tài khoản của bạn</h1>
+        </div>
+        <div style="padding: 30px;">
+          <h2 style="color: #0056b3;">Chào mừng bạn, ${user.username}!</h2>
+          <p>Cảm ơn bạn đã đăng ký tài khoản tại Hệ Thống Quản Lý Khóa Học. Vui lòng sử dụng mã OTP dưới đây để hoàn tất quá trình kích hoạt.</p>
+          <p>Mã OTP của bạn là:</p>
+          <div style="background-color: #f0f0f0; border: 1px dashed #ccc; border-radius: 5px; padding: 15px 20px; text-align: center; margin: 20px 0; width: 100%; box-sizing: border-box;">
+            <p style="font-size: 24px; font-weight: bold; letter-spacing: 5px; margin: 0; color: #d9534f;">${otp}</p>
+          </div>
+          <p style="font-style: italic; color: #888;">Lưu ý: Mã OTP này sẽ chỉ có hiệu lực trong vòng 5 phút.</p>
+          <p>Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email này một cách an toàn.</p>
+        </div>
+        <div style="background-color: #f7f7f7; color: #777; padding: 15px; text-align: center; font-size: 12px;">
+          <p>Trân trọng,<br>Đội ngũ Hệ Thống Quản Lý Khóa Học</p>
+          <p>&copy; ${new Date().getFullYear()} HeThongQuanLyKhoaHoc. All rights reserved.</p>
+        </div>
+      </div>
       `,
     });
 
